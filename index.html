@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#05060f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="description" content="NEON BREACH — a fast, touch-first 3D wave shooter. Hold the grid. Survive the swarm." />
+  <title>NEON BREACH — 3D Mobile Shooter</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305060f'/%3E%3Cpath d='M32 8 54 24v16L32 56 10 40V24z' fill='none' stroke='%2335f0ff' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%23ff2d9b'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main id="app">
+    <canvas id="scene" aria-label="Neon Breach game view"></canvas>
+
+    <div id="fx-damage" aria-hidden="true"></div>
+    <div id="fx-vignette" aria-hidden="true"></div>
+    <div id="fx-scan" aria-hidden="true"></div>
+
+    <div id="look-zone" aria-hidden="true"></div>
+
+    <section id="hud" class="hidden" aria-hidden="true">
+      <div class="hud-top">
+        <div class="hud-left">
+          <div class="panel hull-panel">
+            <div class="panel-corner tl"></div>
+            <div class="panel-corner br"></div>
+            <div class="label">HULL INTEGRITY</div>
+            <div class="hp-track"><div id="hp-fill"></div><div class="hp-ticks"></div></div>
+            <div class="hp-value"><span id="hp-num">100</span><span class="unit">%</span></div>
+          </div>
+          <div class="radar-wrap">
+            <canvas id="radar" width="200" height="200"></canvas>
+            <span class="radar-label">PROXIMITY</span>
+          </div>
+        </div>
+
+        <div class="hud-mid">
+          <div class="wave-chip"><span class="wave-label">WAVE</span><span id="wave-num">1</span></div>
+          <div id="hostile-count">4 HOSTILES</div>
+          <div id="boss-panel" class="hidden">
+            <div id="boss-name">WARDEN</div>
+            <div class="boss-track"><div id="boss-fill"></div></div>
+          </div>
+          <div id="banner">
+            <div id="banner-main">WAVE 1</div>
+            <div id="banner-sub">INCOMING</div>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <div class="score-box">
+            <div class="label">SCORE</div>
+            <div id="score">0</div>
+            <div id="best">BEST 0</div>
+          </div>
+          <div class="sys-buttons">
+            <button id="btn-auto" class="sys-btn on" type="button" aria-label="Toggle auto fire">AUTO</button>
+            <button id="btn-audio" class="sys-btn on" type="button" aria-label="Toggle sound">SND</button>
+            <button id="btn-pause" class="sys-btn" type="button" aria-label="Pause">II</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="crosshair" aria-hidden="true">
+        <span class="ch-arm top"></span>
+        <span class="ch-arm right"></span>
+        <span class="ch-arm bottom"></span>
+        <span class="ch-arm left"></span>
+        <span class="ch-dot"></span>
+        <span class="ch-ring"></span>
+      </div>
+      <div id="hitmarker" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div id="combo" aria-live="off"></div>
+      <div id="dmg-layer" aria-hidden="true"></div>
+
+      <div class="hud-bottom">
+        <div id="ammo-box">
+          <div class="ammo-line"><span id="ammo-num">24</span><span id="ammo-max">/ 24</span></div>
+          <div id="ammo-sub">PULSE RIFLE</div>
+          <div id="reload-track"><div id="reload-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="stick-zone">
+        <div id="stick-base"><div id="stick-ring"></div><div id="stick-knob"></div></div>
+      </div>
+
+      <button id="btn-dash" class="action-btn small" type="button" aria-label="Dash">
+        <span class="ab-icon">»</span><span class="ab-label">DASH</span>
+      </button>
+      <button id="btn-reload" class="action-btn small" type="button" aria-label="Reload">
+        <span class="ab-icon">↻</span><span class="ab-label">RELOAD</span>
+      </button>
+      <button id="btn-fire" class="action-btn fire" type="button" aria-label="Fire">
+        <span class="fire-ring"></span><span class="ab-label">FIRE</span>
+      </button>
+    </section>
+
+    <div id="screen-menu" class="screen">
+      <div class="menu-grid" aria-hidden="true"></div>
+      <div class="menu-inner">
+        <div class="eyebrow"><span class="pulse-dot"></span> OMG ARCADE // SECTOR 07</div>
+        <h1 class="title">NEON<br /><span>BREACH</span></h1>
+        <p class="tagline">Hold the grid. Survive the swarm.</p>
+        <button id="btn-start" class="cta" type="button" aria-label="Start game">
+          <span class="cta-glow"></span>
+          <span class="cta-text">DEPLOY</span>
+        </button>
+        <div class="menu-hints">
+          <div class="hint"><span class="hint-key">◉</span> DRAG RIGHT TO AIM</div>
+          <div class="hint"><span class="hint-key">✛</span> MOVE WITH STICK</div>
+          <div class="hint"><span class="hint-key">⟡</span> AUTO-FIRE BY DEFAULT</div>
+        </div>
+        <div class="menu-best">PERSONAL BEST <strong id="menu-best">0</strong></div>
+      </div>
+      <div class="menu-foot">BEST PLAYED IN LANDSCAPE · HEADPHONES RECOMMENDED</div>
+    </div>
+
+    <div id="screen-pause" class="screen hidden">
+      <div class="menu-inner compact">
+        <div class="eyebrow">// SIMULATION HALTED</div>
+        <h2 class="title small">PAUSED</h2>
+        <div class="pause-stats">
+          <div><span>WAVE</span><strong id="pause-wave">1</strong></div>
+          <div><span>SCORE</span><strong id="pause-score">0</strong></div>
+          <div><span>KILLS</span><strong id="pause-kills">0</strong></div>
+        </div>
+        <div class="button-row">
+          <button id="btn-resume" class="cta compact" type="button"><span class="cta-text">RESUME</span></button>
+          <button id="btn-quit" class="ghost-btn" type="button">RESTART</button>
+        </div>
+        <p class="tiny-help">WASD move · Mouse aim · Click fire · R reload · Shift dash</p>
+      </div>
+    </div>
+
+    <div id="screen-over" class="screen hidden">
+      <div class="menu-inner compact">
+        <div class="eyebrow danger">// SIGNAL LOST</div>
+        <h2 class="title small">OVERRUN</h2>
+        <div class="end-score"><span id="over-score">0</span></div>
+        <div class="end-label">FINAL SCORE</div>
+        <div class="pause-stats">
+          <div><span>WAVE</span><strong id="over-wave">1</strong></div>
+          <div><span>KILLS</span><strong id="over-kills">0</strong></div>
+          <div><span>BEST</span><strong id="over-best">0</strong></div>
+        </div>
+        <button id="btn-redeploy" class="cta" type="button"><span class="cta-text">REDEPLOY</span></button>
+      </div>
+    </div>
+
+    <div id="rotate-hint"><span>↻</span> ROTATE FOR FULL FIELD OF VIEW</div>
+    <div id="loading"><div class="load-mark"></div><span>CALIBRATING OPTICS</span></div>
+  </main>
+
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.js" } }
+  </script>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
