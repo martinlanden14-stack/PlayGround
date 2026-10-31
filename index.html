@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#05060f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="NEON BREACH — a fast, mobile-first 3D wave-survival FPS. Hold the grid. Survive the swarm.">
+<title>NEON BREACH — Mobile FPS</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js" } }
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="game" aria-label="NEON BREACH game viewport"></canvas>
+
+  <!-- ============ HUD ============ -->
+  <div id="hud" class="hidden" aria-hidden="true">
+    <div class="hud-top">
+      <div class="panel health-panel">
+        <div class="stat-label">INTEGRITY</div>
+        <div class="health-row">
+          <div class="bar"><i id="health-fill"></i></div>
+          <div id="health-val" class="stat-value">100</div>
+        </div>
+        <div class="stat-sub"><span id="wave-label">WAVE 01</span><span class="dot">//</span><span id="hostiles-label">CLEAR</span></div>
+      </div>
+
+      <div class="wave-chip panel">
+        <div class="stat-label">WAVE</div>
+        <div id="wave-val" class="wave-num">01</div>
+      </div>
+
+      <div class="hud-right">
+        <div class="sys-buttons">
+          <button id="btn-mute" class="icon-btn" aria-label="Toggle sound">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path class="mute-wave" d="M15.5 8.5a5 5 0 0 1 0 7"/><path class="mute-wave" d="M18.5 5.5a9 9 0 0 1 0 13"/><path class="mute-slash" d="M3 3l18 18"/></svg>
+          </button>
+          <button id="btn-pause" class="icon-btn" aria-label="Pause game">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+          </button>
+        </div>
+        <div class="panel score-panel">
+          <div class="stat-label">SCORE</div>
+          <div id="score-val" class="stat-value big">0</div>
+          <div class="ammo-row">
+            <span id="ammo-val" class="ammo-num">30</span><span class="ammo-max">/ ∞</span>
+            <span id="combo-chip" class="combo-chip hidden">x2</span>
+          </div>
+          <div id="reload-track" class="reload-track"><i id="reload-fill"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="crosshair" class="crosshair">
+      <span class="ch-dot"></span>
+      <span class="ch-line ch-t"></span><span class="ch-line ch-b"></span>
+      <span class="ch-line ch-l"></span><span class="ch-line ch-r"></span>
+      <span id="hitmarker" class="hitmarker"><i></i><i></i><i></i><i></i></span>
+    </div>
+
+    <div id="banner" class="banner hidden">
+      <div id="banner-main" class="banner-main">WAVE 01</div>
+      <div id="banner-sub" class="banner-sub">HOSTILES INBOUND</div>
+    </div>
+
+    <div id="killpop-layer" class="killpop-layer"></div>
+
+    <div id="joystick" class="joystick">
+      <div class="stick-ring"></div>
+      <div id="stick" class="stick"></div>
+      <div class="joy-label">MOVE</div>
+    </div>
+
+    <div class="action-cluster">
+      <button id="btn-fire" class="action-btn fire-btn" aria-label="Fire">
+        <span class="fire-ring"></span>
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+      </button>
+      <button id="btn-reload" class="action-btn small-btn" aria-label="Reload">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 3v6h-6"/></svg>
+        <span class="btn-cap">RELOAD</span>
+      </button>
+      <button id="btn-jump" class="action-btn small-btn" aria-label="Jump">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+        <span class="btn-cap">JUMP</span>
+      </button>
+    </div>
+
+    <div id="damage-vignette" class="damage-vignette"></div>
+    <div id="low-health" class="low-health"></div>
+    <div id="fps-badge" class="fps-badge hidden">-- FPS</div>
+  </div>
+
+  <!-- ============ MENU ============ -->
+  <div id="menu" class="overlay menu-overlay">
+    <div class="grid-deco"></div>
+    <div class="menu-inner">
+      <div class="eyebrow"><span class="pulse-dot"></span> ARCADE DIVISION // SECTOR 07</div>
+      <h1 class="logo">
+        <span class="logo-top">NEON</span>
+        <span class="logo-bottom">BREACH</span>
+      </h1>
+      <p class="tagline">Hold the grid. Survive the swarm.</p>
+      <button id="btn-deploy" class="deploy-btn">
+        <span class="deploy-label">TAP TO DEPLOY</span>
+        <span class="deploy-glow"></span>
+      </button>
+      <div class="hint-row">
+        <div class="hint"><span class="hint-key">◀</span> LEFT STICK — MOVE</div>
+        <div class="hint"><span class="hint-key">◎</span> DRAG RIGHT — AIM</div>
+        <div class="hint"><span class="hint-key">◉</span> HOLD FIRE — SHOOT</div>
+      </div>
+      <div class="menu-foot">
+        <span>BEST <b id="menu-best">0</b></span>
+        <span class="foot-sep">/</span>
+        <span>HEADSHOTS PAY DOUBLE</span>
+      </div>
+    </div>
+    <div class="corner-bracket tl"></div><div class="corner-bracket tr"></div>
+    <div class="corner-bracket bl"></div><div class="corner-bracket br"></div>
+  </div>
+
+  <!-- ============ PAUSE ============ -->
+  <div id="pause" class="overlay pause-overlay hidden">
+    <div class="modal panel">
+      <div class="eyebrow">SYSTEM HALT</div>
+      <h2 class="modal-title">PAUSED</h2>
+      <div class="modal-stats">
+        <div><span>WAVE</span><b id="pause-wave">01</b></div>
+        <div><span>SCORE</span><b id="pause-score">0</b></div>
+      </div>
+      <button id="btn-resume" class="deploy-btn compact"><span class="deploy-label">RESUME</span></button>
+      <button id="btn-quit" class="ghost-btn">ABANDON RUN</button>
+    </div>
+  </div>
+
+  <!-- ============ GAME OVER ============ -->
+  <div id="gameover" class="overlay over-overlay hidden">
+    <div class="modal panel">
+      <div class="eyebrow danger">SIGNAL LOST</div>
+      <h2 class="modal-title danger">RUN OVER</h2>
+      <div class="final-score"><span>SCORE</span><b id="final-score">0</b></div>
+      <div class="modal-stats four">
+        <div><span>WAVE</span><b id="final-wave">1</b></div>
+        <div><span>KILLS</span><b id="final-kills">0</b></div>
+        <div><span>ACCURACY</span><b id="final-acc">0%</b></div>
+        <div><span>BEST</span><b id="final-best">0</b></div>
+      </div>
+      <button id="btn-redeploy" class="deploy-btn compact"><span class="deploy-label">REDEPLOY</span></button>
+      <button id="btn-menu" class="ghost-btn">MAIN MENU</button>
+    </div>
+  </div>
+
+  <div id="rotate-hint" class="rotate-hint">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9a8 8 0 0 1 13.5-3.5L20 8"/><path d="M20 3v5h-5"/><rect x="7" y="13" width="10" height="8" rx="1.5"/></svg>
+    ROTATE FOR FULL VIEW
+  </div>
+
+  <div id="boot-error" class="boot-error hidden">
+    <h2>WEBGL UNAVAILABLE</h2>
+    <p>This device or browser could not start the 3D renderer. Try Chrome or Safari with hardware acceleration enabled.</p>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
