@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d1512" />
+    <meta
+      name="description"
+      content="Casa Aurelia — an interactive, high-detail 3D house you can explore on your phone."
+    />
+    <title>Casa Aurelia — A home in real time</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="module" crossorigin src="/assets/index-cyIHORxs.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CeTkE1CP.css">
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="scene" aria-label="Interactive 3D model of Casa Aurelia"></canvas>
+
+      <div class="scrim scrim-top" aria-hidden="true"></div>
+      <div class="scrim scrim-bottom" aria-hidden="true"></div>
+      <div class="vignette" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4.5 15.5 16 5.5l11.5 10" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M7.5 13.8V27h17V13.8" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M13.2 27v-7.2h5.6V27" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">Casa Aurelia</span>
+            <span class="brand-sub">A home in real time</span>
+          </span>
+        </div>
+
+        <div class="top-actions">
+          <button class="icon-btn glass" id="info-btn" type="button" aria-label="About this model">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="8.5" />
+              <path d="M12 10.6v6" stroke-linecap="round" />
+              <circle cx="12" cy="7.7" r="0.9" fill="currentColor" stroke="none" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="hint" id="hint" role="status">
+        <span class="hint-dot" aria-hidden="true"></span>
+        <span>Drag to explore</span>
+        <span class="hint-sep" aria-hidden="true"></span>
+        <span>Pinch to zoom</span>
+      </div>
+
+      <a
+        class="credit"
+        href="https://sketchfab.com/3d-models/realistic-house-with-interior-c57c2019e5c84e1a8cd0c37c5b87b7ec"
+        target="_blank"
+        rel="noopener"
+      >
+        <span class="credit-label">Model</span>
+        <span>Blender Studio™</span>
+        <span class="credit-sep" aria-hidden="true"></span>
+        <span>CC BY 4.0</span>
+      </a>
+
+      <nav class="dock" aria-label="Scene controls">
+        <div class="presets" role="group" aria-label="Camera view">
+          <button class="dock-btn is-active" type="button" data-preset="hero" aria-pressed="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 12.5 12 5l8 7.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M6.5 11.3V19h11v-7.7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Exterior</span>
+          </button>
+          <button class="dock-btn" type="button" data-preset="garden" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 20v-6" stroke-linecap="round" />
+              <path d="M12 14c0-3.2 2.4-5.5 5.5-5.5 0 3.1-2.4 5.5-5.5 5.5Z" stroke-linejoin="round" />
+              <path d="M12 16c0-2.5-1.9-4.4-4.4-4.4 0 2.5 1.9 4.4 4.4 4.4Z" stroke-linejoin="round" />
+              <path d="M6 20h12" stroke-linecap="round" />
+            </svg>
+            <span>Garden</span>
+          </button>
+          <button class="dock-btn" type="button" data-preset="aerial" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="m3.5 9 8.5-5 8.5 5-8.5 5-8.5-5Z" stroke-linejoin="round" />
+              <path d="m3.5 14 8.5 5 8.5-5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Aerial</span>
+          </button>
+        </div>
+
+        <span class="dock-sep" aria-hidden="true"></span>
+
+        <div class="tools" role="group" aria-label="Display options">
+          <button
+            class="icon-btn glass is-on"
+            id="rotate-btn"
+            type="button"
+            aria-pressed="true"
+            aria-label="Toggle auto-rotate"
+            title="Auto-rotate"
+          >
+            <svg class="icon-rotate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 12a8 8 0 1 1-2.3-5.6" stroke-linecap="round" />
+              <path d="M20 4.5V9h-4.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <button
+            class="icon-btn glass"
+            id="light-btn"
+            type="button"
+            aria-pressed="false"
+            aria-label="Switch to golden hour"
+            title="Golden hour"
+          >
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"
+                stroke-linecap="round"
+              />
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <section class="loader" id="loader" aria-live="polite">
+        <div class="loader-glow" aria-hidden="true"></div>
+        <div class="loader-inner">
+          <p class="loader-eyebrow">Casa Aurelia</p>
+          <h1 class="loader-title">Opening the doors<span class="ellipsis">…</span></h1>
+          <div class="bar" role="progressbar" aria-label="Loading model" aria-valuemin="0" aria-valuemax="100">
+            <span class="bar-fill" id="bar-fill"></span>
+          </div>
+          <div class="loader-meta">
+            <span id="load-pct">0%</span>
+            <span id="load-note">Preparing the garden</span>
+          </div>
+        </div>
+        <p class="loader-foot">A high-detail 3D home · designed for touch</p>
+      </section>
+
+      <dialog class="info" id="info-panel" aria-labelledby="info-title">
+        <button class="info-close" id="info-close" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="m6 6 12 12M18 6 6 18" stroke-linecap="round" />
+          </svg>
+        </button>
+        <p class="info-eyebrow">About the house</p>
+        <h2 id="info-title">A quiet study in warm light.</h2>
+        <p class="info-copy">
+          A fully modelled family home — stucco, terracotta, timber and glass — set in a living garden.
+          Move around it, step closer to the windows, or rise above the roofline.
+        </p>
+        <dl class="info-stats">
+          <div><dt>Geometry</dt><dd>77,500 triangles</dd></div>
+          <div><dt>Materials</dt><dd>18 PBR materials</dd></div>
+          <div><dt>Textures</dt><dd>20 embedded maps</dd></div>
+          <div><dt>Interior</dt><dd>Fully furnished</dd></div>
+        </dl>
+        <div class="info-credit">
+          <p>
+            <strong>Realistic House (With Interior)</strong> by
+            <a href="https://sketchfab.com/Blend_GUY" target="_blank" rel="noopener">Blender Studio™</a>,
+            licensed
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+          </p>
+          <p class="info-fine">Rendered in real time with Three.js. Materials tuned for mobile.</p>
+        </div>
+      </dialog>
+
+      <div class="error" id="error" role="alert" hidden>
+        <p>The house could not be loaded.</p>
+        <button type="button" id="retry-btn">Try again</button>
+      </div>
+    </main>
+
+  </body>
+</html>
