@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#05070d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="description"
+      content="SECTOR 7 — a mobile-first 3D FPS arena shooter. Survive endless waves of machines in a neon-lit combat arena."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305070d'/%3E%3Cpath d='M20 14h24l-4 9H29l-2 4h11l-3 9H26l-6 14h-9z' fill='%2348f5ff'/%3E%3Ccircle cx='45' cy='48' r='5' fill='%23ff2d78'/%3E%3C/svg%3E" />
+    <title>SECTOR 7 — Mobile FPS</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene"></canvas>
+
+      <div class="atmosphere" aria-hidden="true"></div>
+      <div id="damage-flash" aria-hidden="true"></div>
+      <div id="heal-flash" aria-hidden="true"></div>
+
+      <!-- ===================== HUD ===================== -->
+      <div id="hud" aria-hidden="true">
+        <div id="hud-top">
+          <div class="hud-cluster hud-left">
+            <div class="stat-card health-card">
+              <div class="stat-label"><span>INTEGRITY</span><b id="health-value">100</b></div>
+              <div class="meter"><i id="health-ghost"></i><b id="health-fill"></b></div>
+            </div>
+            <div class="stat-card combo-card" id="combo-card">
+              <div class="stat-label"><span>CHAIN</span><b id="combo-value">x1</b></div>
+              <div class="combo-meter"><i id="combo-fill"></i></div>
+            </div>
+          </div>
+
+          <div class="hud-cluster hud-center">
+            <div class="wave-readout">
+              <span class="eyebrow">THREAT WAVE</span>
+              <strong><i>//</i><span id="wave-value">1</span><b id="wave-enemies">0</b></strong>
+            </div>
+          </div>
+
+          <div class="hud-cluster hud-right">
+            <div class="stat-card score-card">
+              <div class="stat-label"><span>SCORE</span><b id="score-value">0</b></div>
+              <div class="stat-label sub"><span>KILLS</span><b id="kills-value">0</b></div>
+            </div>
+            <div class="icon-row">
+              <button id="btn-mute" class="icon-btn" aria-label="Toggle sound">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z" fill="currentColor"/></svg>
+              </button>
+              <button id="btn-pause" class="icon-btn" aria-label="Pause">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 5h4v14H7zm6 0h4v14h-4z" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="boss-wrap">
+          <div class="boss-label"><span>WARDEN</span><b id="boss-hp">100%</b></div>
+          <div class="meter boss-meter"><i id="boss-fill"></i></div>
+        </div>
+
+        <div id="crosshair">
+          <i class="ch ch-t"></i><i class="ch ch-b"></i><i class="ch ch-l"></i><i class="ch ch-r"></i>
+          <b class="ch-dot"></b>
+          <svg class="hitmarker" viewBox="0 0 40 40" width="40" height="40">
+            <path d="M8 8l7 7M32 8l-7 7M8 32l7-7M32 32l-7-7" stroke="currentColor" stroke-width="2.5" fill="none"/>
+          </svg>
+          <div class="reload-tip" id="reload-tip">RELOAD <kbd>R</kbd></div>
+        </div>
+
+        <div id="banner">
+          <span class="banner-kicker" id="banner-kicker">THREAT DETECTED</span>
+          <strong id="banner-title">WAVE 1</strong>
+          <em id="banner-sub">Hold the line</em>
+        </div>
+
+        <div id="toast-stack"></div>
+
+        <div id="touch-controls">
+          <div id="stick-zone">
+            <div id="stick"><div class="stick-ring"></div><div class="stick-knob"></div></div>
+          </div>
+          <div class="touch-buttons">
+            <button id="btn-reload" class="action-btn small">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" fill="currentColor"/></svg>
+              <span>RELOAD</span>
+            </button>
+            <button id="btn-jump" class="action-btn small">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 4l6 6h-4v4h-4v-4H6zM5 18h14v2H5z" fill="currentColor"/></svg>
+              <span>JUMP</span>
+            </button>
+            <button id="btn-fire" class="action-btn fire">
+              <span class="fire-icon"></span>
+              <span class="fire-label">FIRE</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="bottom-left-hint" class="hint">
+          <div class="ammo-block">
+            <span class="eyebrow">PULSE RIFLE</span>
+            <div class="ammo-line"><b id="ammo-value">30</b><span>/ ∞</span></div>
+            <div class="ammo-pips" id="ammo-pips"></div>
+          </div>
+        </div>
+
+        <div id="desktop-hint" class="hint">
+          <kbd>WASD</kbd> MOVE <span class="dot">·</span> <kbd>SHIFT</kbd> SPRINT
+          <span class="dot">·</span> <kbd>SPACE</kbd> JUMP <span class="dot">·</span>
+          <kbd>R</kbd> RELOAD <span class="dot">·</span> <kbd>ESC</kbd> PAUSE
+        </div>
+      </div>
+
+      <!-- ===================== MENU ===================== -->
+      <div id="screen-menu" class="screen" data-open="true">
+        <div class="screen-inner menu-inner">
+          <header class="menu-top">
+            <div class="brand">
+              <span class="brand-mark"></span>
+              <span>SECTOR&nbsp;SEVEN <em>// ARENA PROTOCOL</em></span>
+            </div>
+            <div class="menu-top-right">
+              <button id="btn-menu-mute" class="icon-btn ghost" aria-label="Toggle sound">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </header>
+
+          <main class="menu-main">
+            <div class="menu-copy">
+              <p class="eyebrow flicker">TOUCH-SYNCED COMBAT SIMULATION</p>
+              <h1 class="game-title"><span>SECTOR</span><b>7</b></h1>
+              <p class="tagline">
+                The last arena on the grid is live. Drop in, hold the platform,
+                and put down every machine the Warden sends your way.
+              </p>
+
+              <div class="menu-actions">
+                <button id="btn-play" class="cta">
+                  <span class="cta-glow"></span>
+                  <span class="cta-text">ENTER ARENA</span>
+                  <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5l10 7-10 7z" fill="currentColor"/></svg>
+                </button>
+                <div class="best-score">
+                  <span class="eyebrow">PERSONAL BEST</span>
+                  <b id="best-score">0</b>
+                </div>
+              </div>
+
+              <div class="control-legend">
+                <div class="legend-col" data-input="touch">
+                  <span class="eyebrow">MOBILE CONTROLS</span>
+                  <ul>
+                    <li><i class="glyph stick-glyph"></i> Left thumb — move / sprint</li>
+                    <li><i class="glyph look-glyph"></i> Right drag — aim</li>
+                    <li><i class="glyph fire-glyph"></i> FIRE — hold &amp; slide to aim</li>
+                  </ul>
+                </div>
+                <div class="legend-col" data-input="desktop">
+                  <span class="eyebrow">DESKTOP CONTROLS</span>
+                  <ul>
+                    <li><kbd>WASD</kbd> move <span class="sep">/</span> <kbd>SHIFT</kbd> sprint</li>
+                    <li><kbd>MOUSE</kbd> aim <span class="sep">/</span> <kbd>CLICK</kbd> fire</li>
+                    <li><kbd>SPACE</kbd> jump <span class="sep">/</span> <kbd>R</kbd> reload</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <aside class="menu-side">
+              <div class="brief-card">
+                <span class="eyebrow">MISSION BRIEF</span>
+                <h3>SURVIVE THE SWARM</h3>
+                <p>
+                  Drones hunt in packs. Stalkers rush the platform. Every fifth
+                  wave, a Warden drops in. Chain kills without taking a break to
+                  multiply your score.
+                </p>
+                <div class="brief-stats">
+                  <div><b id="menu-best">0</b><span>BEST SCORE</span></div>
+                  <div><b id="menu-wave">0</b><span>BEST WAVE</span></div>
+                </div>
+              </div>
+              <div class="side-tag">BUILD 1.0 // SWIFTSHADER READY</div>
+            </aside>
+          </main>
+
+          <footer class="menu-footer">
+            <span>MOBILE-FIRST FPS</span>
+            <span class="footer-marquee">TOUCH CONTROLS <i>◆</i> PROCEDURAL ARENA <i>◆</i> ENDLESS THREAT <i>◆</i> TOUCH CONTROLS <i>◆</i> PROCEDURAL ARENA</span>
+            <span>NO DOWNLOAD</span>
+          </footer>
+        </div>
+      </div>
+
+      <!-- ===================== PAUSE ===================== -->
+      <div id="screen-pause" class="screen dark" data-open="false">
+        <div class="screen-inner narrow">
+          <p class="eyebrow">SIMULATION SUSPENDED</p>
+          <h2 class="screen-title">PAUSED</h2>
+          <p class="screen-sub">The swarm is holding its breath.</p>
+          <div class="stack-actions">
+            <button id="btn-resume" class="cta small-cta"><span class="cta-text">RESUME</span></button>
+            <button id="btn-restart" class="ghost-btn">RESTART RUN</button>
+            <button id="btn-quit" class="ghost-btn">EXIT TO MENU</button>
+          </div>
+          <div class="pause-settings">
+            <button id="btn-pause-mute" class="ghost-btn inline">SOUND: ON</button>
+            <span class="pause-stat">WAVE <b id="pause-wave">1</b> · SCORE <b id="pause-score">0</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== GAME OVER ===================== -->
+      <div id="screen-over" class="screen dark" data-open="false">
+        <div class="screen-inner narrow">
+          <p class="eyebrow danger">SIGNAL LOST</p>
+          <h2 class="screen-title over-title">RUN TERMINATED</h2>
+          <p class="screen-sub" id="over-sub">The machines took the arena.</p>
+
+          <div class="result-grid">
+            <div><span>SCORE</span><b id="over-score">0</b></div>
+            <div><span>WAVE</span><b id="over-wave">1</b></div>
+            <div><span>KILLS</span><b id="over-kills">0</b></div>
+            <div><span>BEST CHAIN</span><b id="over-combo">x1</b></div>
+          </div>
+          <p class="record-line" id="record-line">PERSONAL BEST</p>
+
+          <div class="stack-actions">
+            <button id="btn-again" class="cta small-cta"><span class="cta-text">REDEPLOY</span></button>
+            <button id="btn-over-menu" class="ghost-btn">EXIT TO MENU</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="rotate-hint">
+        <div class="rotate-icon"></div>
+        <strong>ROTATE YOUR DEVICE</strong>
+        <span>Landscape gives you a wider field of fire.</span>
+        <button id="btn-rotate-dismiss">PLAY IN PORTRAIT</button>
+      </div>
+
+      <div id="boot">
+        <div class="boot-logo">SECTOR<span>7</span></div>
+        <div class="boot-bar"><i></i></div>
+        <span class="boot-text">CALIBRATING ARENA…</span>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
