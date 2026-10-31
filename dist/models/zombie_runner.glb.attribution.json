@@ -1,0 +1,51 @@
+{
+  "uid": "131688807ad444609ed9b2ed572dc4aa",
+  "name": "Zombie (Rigged & Animated)",
+  "author": "Aiden Studios",
+  "authorUrl": "https://sketchfab.com/aidenstudios",
+  "license": "CC Attribution",
+  "licenseUrl": null,
+  "modelUrl": "https://sketchfab.com/3d-models/none-131688807ad444609ed9b2ed572dc4aa",
+  "thumbnailUrl": "https://media.sketchfab.com/models/131688807ad444609ed9b2ed572dc4aa/thumbnails/62ee2ae4525341bcbf7b3fe99c8da788/03b12542bbf044fbb9ba49ba35813314.jpeg",
+  "glbBytes": 40664076,
+  "faceCount": 19508,
+  "vertexCount": 10709,
+  "textureCount": 13,
+  "textureMaxResolution": 2048,
+  "animationCount": 3,
+  "animations": [
+    {
+      "uid": "5305361a05b64f2aa695876d033d4b69",
+      "name": "Attack1.001",
+      "url": "https://media.sketchfab.com/models/131688807ad444609ed9b2ed572dc4aa/9199bde64a29459fb38499ad3715d0d8/animations/5305361a05b64f2aa695876d033d4b69.bin.gz",
+      "size": 106064,
+      "duration": 2.16,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2023-08-07T13:22:05.595522",
+      "updatedAt": "2023-08-07T13:28:46.522738"
+    },
+    {
+      "uid": "cfc96233c1ae44458a9427b8080e2e58",
+      "name": "Walk1",
+      "url": "https://media.sketchfab.com/models/131688807ad444609ed9b2ed572dc4aa/9199bde64a29459fb38499ad3715d0d8/animations/cfc96233c1ae44458a9427b8080e2e58.bin.gz",
+      "size": 145492,
+      "duration": 2.16,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2023-08-07T13:22:05.603909",
+      "updatedAt": "2023-08-07T13:28:46.583203"
+    },
+    {
+      "uid": "a4c2f88846754716ba92017549a81aa0",
+      "name": "Idle",
+      "url": "https://media.sketchfab.com/models/131688807ad444609ed9b2ed572dc4aa/9199bde64a29459fb38499ad3715d0d8/animations/a4c2f88846754716ba92017549a81aa0.bin.gz",
+      "size": 91752,
+      "duration": 2.16,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2023-08-07T13:22:05.599962",
+      "updatedAt": "2023-08-07T13:28:46.514366"
+    }
+  ]
+}

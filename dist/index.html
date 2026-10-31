@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#05080c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="DEAD SIGNAL — survive the outbreak. A cinematic mobile zombie FPS." />
+    <title>DEAD SIGNAL — Survive the Outbreak</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☣</text></svg>" />
+    <script type="module" crossorigin src="/assets/index-3MlR6S1e.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CG36Fp2k.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas" aria-label="Game viewport"></canvas>
+
+      <!-- ============================== LOADING ============================== -->
+      <section id="loading" class="screen loading-screen">
+        <div class="loading-mark">☣</div>
+        <div class="loading-title">DEAD SIGNAL</div>
+        <div class="loading-bar"><span id="loading-fill"></span></div>
+        <div class="loading-status" id="loading-status">ESTABLISHING UPLINK</div>
+        <div class="loading-tip" id="loading-tip">Tip: Aim for the head. It saves ammo — and it sends a message.</div>
+      </section>
+
+      <!-- ============================== TITLE ============================== -->
+      <section id="title-screen" class="screen title-screen hidden">
+        <div class="title-topline">
+          <span class="live-dot"></span>
+          <span>QUARANTINE ZONE 07</span>
+          <span class="dim">//</span>
+          <span>03:47 HRS</span>
+          <span class="dim">//</span>
+          <span class="danger">SIGNAL LOST</span>
+        </div>
+
+        <div class="title-wrap">
+          <div class="eyebrow">A CINEMATIC SURVIVAL FPS</div>
+          <h1 class="game-title" data-text="DEAD SIGNAL">DEAD SIGNAL</h1>
+          <div class="title-rule"><span></span><b>☣</b><span></span></div>
+          <p class="tagline">THE CITY IS GONE. <em>YOU ARE STILL HERE.</em></p>
+          <button id="deploy-btn" class="deploy-btn" aria-label="Deploy">
+            <span class="deploy-inner">
+              <span class="deploy-label">TAP TO DEPLOY</span>
+              <span class="deploy-sub">WAVE SURVIVAL · ENDLESS NIGHT</span>
+            </span>
+          </button>
+          <div class="title-meta">
+            <span>M4A1 · 5.56 NATO</span>
+            <span class="dim">|</span>
+            <span>MOBILE READY</span>
+            <span class="dim">|</span>
+            <span>HEADPHONES RECOMMENDED</span>
+          </div>
+        </div>
+
+        <div class="title-bottom">
+          <button id="credits-btn" class="text-btn">ASSET CREDITS</button>
+          <div class="title-controls">
+            <span><b>WASD</b> MOVE</span>
+            <span><b>MOUSE</b> AIM</span>
+            <span><b>R</b> RELOAD</span>
+            <span><b>SHIFT</b> SPRINT</span>
+          </div>
+          <button id="settings-btn-title" class="text-btn">SETTINGS</button>
+        </div>
+
+        <div class="scanlines"></div>
+      </section>
+
+      <!-- ============================== HUD ============================== -->
+      <section id="hud" class="hud hidden">
+        <div class="hud-vignette"></div>
+        <div id="damage-flash" class="damage-flash"></div>
+        <div id="low-health" class="low-health"></div>
+
+        <div class="hud-top">
+          <div class="hud-left">
+            <div class="health-block">
+              <div class="hud-label"><span class="cross-icon">✚</span> VITALS</div>
+              <div class="health-row">
+                <div class="health-bar"><span id="health-fill"></span><i id="health-ghost"></i></div>
+                <span id="health-num" class="health-num">100</span>
+              </div>
+              <div class="armor-bar"><span id="armor-fill"></span></div>
+            </div>
+          </div>
+
+          <div class="wave-block">
+            <div class="wave-label">WAVE</div>
+            <div class="wave-num" id="wave-num">01</div>
+            <div class="wave-sub"><span id="zombies-left">0</span> HOSTILES REMAIN</div>
+          </div>
+
+          <div class="hud-right">
+            <div class="score-block">
+              <div class="hud-label">SCORE</div>
+              <div class="score-num" id="score-num">000000</div>
+              <div class="kills-row"><span id="kills-num">0</span> KILLS · <span id="headshots-num">0</span> HS</div>
+            </div>
+            <button id="pause-btn" class="icon-btn" aria-label="Pause">❚❚</button>
+          </div>
+        </div>
+
+        <div id="kill-feed" class="kill-feed"></div>
+
+        <div class="crosshair" id="crosshair">
+          <span class="ch ch-t"></span><span class="ch ch-b"></span>
+          <span class="ch ch-l"></span><span class="ch ch-r"></span>
+          <span class="ch-dot"></span>
+        </div>
+        <div id="hitmarker" class="hitmarker"><i></i><i></i><i></i><i></i></div>
+        <div id="headshot-badge" class="headshot-badge">HEADSHOT</div>
+
+        <div class="hud-bottom">
+          <div class="weapon-block">
+            <div class="weapon-name">M4A1 <span>CARBINE</span></div>
+            <div class="ammo-row">
+              <span id="ammo-mag" class="ammo-mag">30</span>
+              <span class="ammo-slash">/</span>
+              <span id="ammo-reserve" class="ammo-reserve">180</span>
+            </div>
+            <div class="ammo-pips" id="ammo-pips"></div>
+          </div>
+          <div class="prompt" id="prompt"></div>
+        </div>
+
+        <div id="wave-banner" class="wave-banner">
+          <div class="wb-kicker" id="wb-kicker">INCOMING</div>
+          <div class="wb-title" id="wb-title">WAVE 01</div>
+          <div class="wb-sub" id="wb-sub">HOLD THE LINE</div>
+        </div>
+
+        <!-- Mobile controls -->
+        <div id="mobile-controls" class="mobile-controls">
+          <div id="joystick-zone" class="joystick-zone">
+            <div class="joystick-base"><span class="joystick-ring"></span></div>
+            <div id="joystick-knob" class="joystick-knob"></div>
+            <div class="joystick-label">MOVE</div>
+          </div>
+          <div class="action-cluster">
+            <button id="reload-btn" class="action-btn reload-btn" aria-label="Reload">
+              <span class="action-icon">⟳</span><span class="action-label">RELOAD</span>
+            </button>
+            <button id="fire-btn" class="action-btn fire-btn" aria-label="Fire">
+              <span class="fire-ring"></span>
+              <span class="action-icon">✛</span><span class="action-label">FIRE</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="look-zone" id="look-zone"></div>
+      </section>
+
+      <!-- ============================== PAUSE ============================== -->
+      <section id="pause-screen" class="screen modal-screen hidden">
+        <div class="modal">
+          <div class="modal-kicker">SIGNAL PAUSED</div>
+          <h2 class="modal-title">HOLD POSITION</h2>
+          <div class="modal-stats" id="pause-stats"></div>
+          <div class="modal-actions">
+            <button id="resume-btn" class="primary-btn">RESUME</button>
+            <button id="restart-btn-pause" class="ghost-btn">RESTART</button>
+          </div>
+          <div class="settings-inline">
+            <label>SENSITIVITY <input id="sens-pause" type="range" min="0.4" max="2.2" step="0.05" value="1" /></label>
+            <label>QUALITY
+              <select id="quality-pause">
+                <option value="auto">AUTO</option>
+                <option value="high">HIGH</option>
+                <option value="low">PERFORMANCE</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== DEATH ============================== -->
+      <section id="death-screen" class="screen modal-screen hidden">
+        <div class="death-blood"></div>
+        <div class="modal death-modal">
+          <div class="modal-kicker danger">VITALS FLATLINED</div>
+          <h2 class="modal-title death-title" data-text="YOU DIED">YOU DIED</h2>
+          <p class="death-quote" id="death-quote">The signal went quiet.</p>
+          <div class="modal-stats" id="death-stats"></div>
+          <div class="modal-actions">
+            <button id="retry-btn" class="primary-btn">REDEPLOY</button>
+            <button id="menu-btn" class="ghost-btn">MAIN MENU</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== CREDITS ============================== -->
+      <section id="credits-screen" class="screen modal-screen hidden">
+        <div class="modal credits-modal">
+          <div class="modal-kicker">FIELD MANUAL / ATTRIBUTION</div>
+          <h2 class="modal-title">ASSET CREDITS</h2>
+          <div class="credits-body">
+            <p>DEAD SIGNAL is a playable prototype built with <b>Three.js</b>. All environment art, textures, effects, and audio are procedurally generated in code.</p>
+            <div class="credit-card">
+              <b>Zombie (Rigged &amp; Animated)</b>
+              <span>by Aiden Studios — CC Attribution 4.0</span>
+              <a href="https://sketchfab.com/aidenstudios" target="_blank" rel="noopener">sketchfab.com/aidenstudios</a>
+            </div>
+            <div class="credit-card">
+              <b>M4 – FPS Weapon Animations Pack (v.1)</b>
+              <span>by BarcodeGames — CC Attribution 4.0</span>
+              <a href="https://sketchfab.com/barcodegames" target="_blank" rel="noopener">sketchfab.com/barcodegames</a>
+            </div>
+            <p class="fine">Models were normalized for real-time web rendering. No endorsement by the authors is implied. Viewer discretion: contains stylized violence and gore.</p>
+          </div>
+          <div class="modal-actions"><button id="credits-close" class="primary-btn">BACK</button></div>
+        </div>
+      </section>
+
+      <!-- ============================== SETTINGS ============================== -->
+      <section id="settings-screen" class="screen modal-screen hidden">
+        <div class="modal settings-modal">
+          <div class="modal-kicker">OPERATOR PREFERENCES</div>
+          <h2 class="modal-title">SETTINGS</h2>
+          <div class="settings-grid">
+            <label class="setting">
+              <span>LOOK SENSITIVITY</span>
+              <input id="sens-title" type="range" min="0.4" max="2.2" step="0.05" value="1" />
+              <output id="sens-out">1.00</output>
+            </label>
+            <label class="setting">
+              <span>GRAPHICS QUALITY</span>
+              <select id="quality-title">
+                <option value="auto">AUTO</option>
+                <option value="high">HIGH</option>
+                <option value="low">PERFORMANCE</option>
+              </select>
+            </label>
+            <label class="setting toggle">
+              <span>GORE &amp; DISMEMBERMENT</span>
+              <input id="gore-toggle" type="checkbox" checked />
+              <i class="switch"></i>
+            </label>
+            <label class="setting toggle">
+              <span>AIM ASSIST (MOBILE)</span>
+              <input id="assist-toggle" type="checkbox" checked />
+              <i class="switch"></i>
+            </label>
+          </div>
+          <div class="modal-actions"><button id="settings-close" class="primary-btn">APPLY</button></div>
+        </div>
+      </section>
+
+      <div id="rotate-hint" class="rotate-hint">
+        <div class="rotate-icon">▭</div>
+        <div>ROTATE YOUR DEVICE</div>
+        <span>DEAD SIGNAL is best played in landscape.</span>
+      </div>
+
+      <div id="fps-meter" class="fps-meter"></div>
+    </div>
+  </body>
+</html>

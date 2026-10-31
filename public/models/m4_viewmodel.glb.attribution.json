@@ -1,0 +1,73 @@
+{
+  "uid": "662fc74dda2646cfb48fc610705768ef",
+  "name": "M4 - FPS Weapon Animations Pack (v.1)",
+  "author": "BarcodeGames",
+  "authorUrl": "https://sketchfab.com/barcodegames",
+  "license": "CC Attribution",
+  "licenseUrl": null,
+  "modelUrl": "https://sketchfab.com/3d-models/none-662fc74dda2646cfb48fc610705768ef",
+  "thumbnailUrl": "https://media.sketchfab.com/models/662fc74dda2646cfb48fc610705768ef/thumbnails/2287e01cf05343969b0947bccf88fe42/2850574d14e84e2394a02712a1941613.jpeg",
+  "glbBytes": 11522080,
+  "faceCount": 14814,
+  "vertexCount": 13517,
+  "textureCount": 10,
+  "textureMaxResolution": 2048,
+  "animationCount": 5,
+  "animations": [
+    {
+      "uid": "5bc4794775ea440bbb20c66cdf7cb228",
+      "name": "Holster",
+      "url": "https://media.sketchfab.com/models/662fc74dda2646cfb48fc610705768ef/eba3e6c5ca4d44119af850ceb007c5b6/animations/5bc4794775ea440bbb20c66cdf7cb228.bin.gz",
+      "size": 42472,
+      "duration": 0.567,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2026-09-18T09:18:25.297960",
+      "updatedAt": "2026-09-18T12:45:31.002750"
+    },
+    {
+      "uid": "c2dcc778fc6f465bba8ae38d5da9a1cd",
+      "name": "Fire",
+      "url": "https://media.sketchfab.com/models/662fc74dda2646cfb48fc610705768ef/eba3e6c5ca4d44119af850ceb007c5b6/animations/c2dcc778fc6f465bba8ae38d5da9a1cd.bin.gz",
+      "size": 61748,
+      "duration": 0.8,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2026-09-18T09:18:25.291859",
+      "updatedAt": "2026-09-18T12:45:31.272423"
+    },
+    {
+      "uid": "17f5351e6afc4ca3bb4f9d64a62b6b30",
+      "name": "Reload",
+      "url": "https://media.sketchfab.com/models/662fc74dda2646cfb48fc610705768ef/eba3e6c5ca4d44119af850ceb007c5b6/animations/17f5351e6afc4ca3bb4f9d64a62b6b30.bin.gz",
+      "size": 287024,
+      "duration": 3.633,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2026-09-18T09:18:25.276569",
+      "updatedAt": "2026-09-18T12:45:31.001972"
+    },
+    {
+      "uid": "9bde0261df4744e396ddcd525be86d05",
+      "name": "Draw",
+      "url": "https://media.sketchfab.com/models/662fc74dda2646cfb48fc610705768ef/eba3e6c5ca4d44119af850ceb007c5b6/animations/9bde0261df4744e396ddcd525be86d05.bin.gz",
+      "size": 78592,
+      "duration": 1.033,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2026-09-18T09:18:25.303428",
+      "updatedAt": "2026-09-18T12:45:31.005271"
+    },
+    {
+      "uid": "7cd7de55725b4b1990c1ef0fcaa2ed2b",
+      "name": "Reload_Empty",
+      "url": "https://media.sketchfab.com/models/662fc74dda2646cfb48fc610705768ef/eba3e6c5ca4d44119af850ceb007c5b6/animations/7cd7de55725b4b1990c1ef0fcaa2ed2b.bin.gz",
+      "size": 301536,
+      "duration": 3.8,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2026-09-18T09:18:25.287868",
+      "updatedAt": "2026-09-18T12:45:31.004785"
+    }
+  ]
+}

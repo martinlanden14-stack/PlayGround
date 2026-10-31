@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Model Inspector</title>
+  <style>
+    html,body{margin:0;height:100%;background:#0a0d10;overflow:hidden;color:#ddd;font-family:monospace}
+    canvas{display:block}
+    #hud{position:fixed;left:12px;top:12px;font-size:11px;line-height:1.6;background:#0008;padding:10px 12px;border:1px solid #333;white-space:pre}
+    #btns{position:fixed;right:12px;top:12px;display:flex;gap:6px}
+    button{background:#111;color:#cfc;border:1px solid #555;padding:6px 10px;font-family:monospace;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div id="hud">loading…</div>
+  <div id="btns">
+    <button data-view="three">3/4</button>
+    <button data-view="front">FRONT</button>
+    <button data-view="side">SIDE</button>
+    <button data-view="top">TOP</button>
+  </div>
+  <script type="module" src="./src/viewer.js"></script>
+</body>
+</html>
