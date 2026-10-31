@@ -1,0 +1,95 @@
+{
+  "uid": "f504d5c533654630a062b4effcae597b",
+  "name": "Flagellant (rigify rig)",
+  "author": "SlagPerch 3D",
+  "authorUrl": "https://sketchfab.com/slagperch3d",
+  "license": "CC Attribution",
+  "licenseUrl": null,
+  "modelUrl": "https://sketchfab.com/3d-models/none-f504d5c533654630a062b4effcae597b",
+  "thumbnailUrl": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/thumbnails/c5c6a91e1476498c8e0e07ec5aa28ec1/249f1b3fb10a462b8de76498bb255faa.jpeg",
+  "glbBytes": 29187544,
+  "faceCount": 20877,
+  "vertexCount": 14818,
+  "textureCount": 6,
+  "textureMaxResolution": 2048,
+  "animationCount": 7,
+  "animations": [
+    {
+      "uid": "aba6dfdb31a7458480b341875f942d44",
+      "name": "Slash",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/aba6dfdb31a7458480b341875f942d44.bin.gz",
+      "size": 1085024,
+      "duration": 10.792,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.351582",
+      "updatedAt": "2024-05-11T05:49:33.351594"
+    },
+    {
+      "uid": "9f89ae997a6e43338976a7d6bd707a68",
+      "name": "Sheath",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/9f89ae997a6e43338976a7d6bd707a68.bin.gz",
+      "size": 541008,
+      "duration": 5.375,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.346001",
+      "updatedAt": "2024-05-11T05:49:33.346013"
+    },
+    {
+      "uid": "2b67b63ee94b41aaa7d7df1c0b7cbff8",
+      "name": "Run",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/2b67b63ee94b41aaa7d7df1c0b7cbff8.bin.gz",
+      "size": 499220,
+      "duration": 4.958,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.342173",
+      "updatedAt": "2024-05-11T05:49:33.342184"
+    },
+    {
+      "uid": "1adcfedd313f4776b54fa740cf733af6",
+      "name": "Flex",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/1adcfedd313f4776b54fa740cf733af6.bin.gz",
+      "size": 647764,
+      "duration": 6.5,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.335427",
+      "updatedAt": "2024-05-11T05:49:33.335439"
+    },
+    {
+      "uid": "fedcdd9bfafd4fb79e30a777b3d94b27",
+      "name": "Dance2",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/fedcdd9bfafd4fb79e30a777b3d94b27.bin.gz",
+      "size": 1258544,
+      "duration": 13.708,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.332170",
+      "updatedAt": "2024-05-11T05:49:33.332182"
+    },
+    {
+      "uid": "fb1de6c6977f400386bc30b67acfc60e",
+      "name": "Dance1",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/fb1de6c6977f400386bc30b67acfc60e.bin.gz",
+      "size": 915996,
+      "duration": 9.125,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.328262",
+      "updatedAt": "2024-05-11T05:49:33.328275"
+    },
+    {
+      "uid": "f7049c90f1454946a51ab45074554970",
+      "name": "Boxing",
+      "url": "https://media.sketchfab.com/models/f504d5c533654630a062b4effcae597b/f4911c29c73744e4b10d7a4751694f1a/animations/f7049c90f1454946a51ab45074554970.bin.gz",
+      "size": 1018256,
+      "duration": 10.167,
+      "isLoop": false,
+      "isEnabled": true,
+      "createdAt": "2024-05-11T05:49:33.323611",
+      "updatedAt": "2024-05-11T05:49:33.323625"
+    }
+  ]
+}

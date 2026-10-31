@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#07090b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>ASHFALL — Mortal Reckoning</title>
+  <meta name="description" content="A cinematic 2.5D martial arts fighting game forged for mobile." />
+  <link rel="preload" href="./fonts/cinzel-900.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="./fonts/rajdhani-600.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="stage" aria-label="Ashfall fighting arena"></canvas>
+
+    <div class="atmosphere" aria-hidden="true">
+      <div class="vignette"></div>
+      <div class="grain"></div>
+      <div class="scanlines"></div>
+      <div id="flash"></div>
+      <div id="blood-vignette"></div>
+    </div>
+
+    <header id="hud" class="hud is-hidden" aria-label="Fight status">
+      <div class="hud-side hud-player">
+        <div class="hud-meta">
+          <span class="hud-tag">CHALLENGER</span>
+          <span class="hud-name" id="p-name">NYX</span>
+        </div>
+        <div class="health-frame">
+          <div class="health-ghost" id="p-health-ghost"></div>
+          <div class="health-fill" id="p-health"></div>
+          <div class="health-glint"></div>
+        </div>
+        <div class="under-bar">
+          <div class="round-pips" id="p-rounds"><i></i><i></i></div>
+          <div class="super-meter"><span class="super-label" id="p-super-label">CRIMSON</span><div class="super-track"><div class="super-fill" id="p-super"></div></div></div>
+        </div>
+      </div>
+
+      <div class="timer-block">
+        <div class="timer-ring"><span id="timer">99</span></div>
+        <span class="round-label" id="round-label">ROUND 1</span>
+      </div>
+
+      <div class="hud-side hud-enemy">
+        <div class="hud-meta">
+          <span class="hud-name" id="e-name">KAELUS</span>
+          <span class="hud-tag">WARDEN</span>
+        </div>
+        <div class="health-frame">
+          <div class="health-ghost" id="e-health-ghost"></div>
+          <div class="health-fill" id="e-health"></div>
+          <div class="health-glint"></div>
+        </div>
+        <div class="under-bar">
+          <div class="round-pips" id="e-rounds"><i></i><i></i></div>
+          <div class="super-meter"><div class="super-track"><div class="super-fill" id="e-super"></div></div><span class="super-label" id="e-super-label">TECTONIC</span></div>
+        </div>
+      </div>
+    </header>
+
+    <div id="announcer" aria-live="polite">
+      <span class="announce-kicker" id="announce-kicker"></span>
+      <span class="announce-main" id="announce-main"></span>
+      <span class="announce-sub" id="announce-sub"></span>
+    </div>
+
+    <div id="combo-display" aria-live="polite">
+      <span id="combo-count">2</span><small>HIT COMBO</small>
+    </div>
+
+    <div id="execution-prompt" class="is-hidden">
+      <span>EXECUTION READY</span>
+      <small>TAP SPECIAL</small>
+    </div>
+
+    <div id="touch-controls" class="touch-controls is-hidden" aria-label="Fight controls">
+      <div class="move-zone" id="move-zone">
+        <div class="joystick" id="joystick">
+          <div class="joystick-ring"></div>
+          <div class="joystick-knob" id="joystick-knob"></div>
+          <span class="joystick-arrow left">‹</span>
+          <span class="joystick-arrow right">›</span>
+        </div>
+        <span class="control-caption">MOVE</span>
+      </div>
+
+      <div class="action-zone">
+        <button class="fight-btn btn-jump" data-action="jump" aria-label="Jump"><span class="btn-glyph">▲</span><span class="btn-label">JUMP</span></button>
+        <button class="fight-btn btn-special" data-action="special" aria-label="Special"><span class="btn-glyph">✦</span><span class="btn-label">SPECIAL</span></button>
+        <button class="fight-btn btn-block" data-action="block" aria-label="Block"><span class="btn-glyph">◆</span><span class="btn-label">BLOCK</span></button>
+        <button class="fight-btn btn-kick" data-action="kick" aria-label="Kick"><span class="btn-glyph">╱</span><span class="btn-label">KICK</span></button>
+        <button class="fight-btn btn-punch" data-action="punch" aria-label="Punch"><span class="btn-glyph">✕</span><span class="btn-label">PUNCH</span></button>
+      </div>
+    </div>
+
+    <div id="desktop-hints" class="desktop-hints is-hidden">
+      <span><b>A</b><b>D</b> MOVE</span>
+      <span><b>J</b> PUNCH</span>
+      <span><b>K</b> KICK</span>
+      <span><b>L</b> BLOCK</span>
+      <span><b>U</b> SPECIAL</span>
+      <span><b>W</b> JUMP</span>
+    </div>
+
+    <main id="screens">
+      <section id="title-screen" class="screen is-active">
+        <div class="title-topline">
+          <span>AN ORIGINAL CINEMATIC FIGHTER</span>
+          <button class="icon-btn" id="sound-toggle" aria-label="Toggle sound">SOUND ON</button>
+        </div>
+
+        <div class="title-lockup">
+          <span class="title-kicker">THE REALM BLEEDS</span>
+          <h1 class="game-title"><span>ASH</span>FALL</h1>
+          <div class="title-rule"><i></i><span>MORTAL RECKONING</span><i></i></div>
+          <p class="title-blurb">Two warriors. One throne of ash.<br />No mercy survives the night.</p>
+        </div>
+
+        <div class="title-actions">
+          <button class="ornate-btn primary" id="play-now">PLAY NOW</button>
+          <button class="ornate-btn" id="choose-fighter">CHOOSE WARRIOR</button>
+          <button class="text-btn" id="how-to-play">HOW TO FIGHT</button>
+        </div>
+
+        <div class="title-footer">
+          <span>2.5D CINEMATIC COMBAT</span>
+          <span class="footer-diamond">◆</span>
+          <span>BEST PLAYED WITH SOUND</span>
+        </div>
+      </section>
+
+      <section id="select-screen" class="screen select-screen">
+        <div class="screen-heading">
+          <button class="back-btn" id="select-back" aria-label="Back">←</button>
+          <span class="eyebrow">CHOOSE YOUR FATE</span>
+          <h2>SELECT WARRIOR</h2>
+          <p>The arena remembers every wound.</p>
+        </div>
+
+        <div class="roster">
+          <button class="fighter-card is-selected" data-fighter="nyx">
+            <div class="portrait" id="portrait-nyx"></div>
+            <div class="portrait-fade"></div>
+            <div class="card-corners"></div>
+            <div class="card-copy">
+              <span class="archetype">SHADOW ASSASSIN</span>
+              <h3>NYX</h3>
+              <p>Fast. Silent. Unforgiving.</p>
+              <div class="stat-row"><span>SPEED</span><i style="--v: 92%"></i></div>
+              <div class="stat-row"><span>POWER</span><i style="--v: 62%"></i></div>
+              <div class="stat-row"><span>REACH</span><i style="--v: 74%"></i></div>
+            </div>
+            <span class="select-mark">SELECTED</span>
+          </button>
+
+          <button class="fighter-card" data-fighter="kaelus">
+            <div class="portrait" id="portrait-kaelus"></div>
+            <div class="portrait-fade"></div>
+            <div class="card-corners"></div>
+            <div class="card-copy">
+              <span class="archetype">ASHEN WARDEN</span>
+              <h3>KAELUS</h3>
+              <p>Heavy. Relentless. Immovable.</p>
+              <div class="stat-row"><span>SPEED</span><i style="--v: 54%"></i></div>
+              <div class="stat-row"><span>POWER</span><i style="--v: 96%"></i></div>
+              <div class="stat-row"><span>REACH</span><i style="--v: 86%"></i></div>
+            </div>
+            <span class="select-mark">SELECTED</span>
+          </button>
+        </div>
+
+        <div class="select-actions">
+          <button class="ornate-btn primary" id="enter-arena">ENTER THE ARENA</button>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen result-screen">
+        <div class="result-copy">
+          <span class="eyebrow" id="result-kicker">THE NIGHT IS YOURS</span>
+          <h2 id="result-title">VICTORY</h2>
+          <p id="result-subtitle">KAELUS FALLS. THE REALM REMEMBERS.</p>
+          <div class="result-stats">
+            <div><span>TIME</span><strong id="stat-time">01:24</strong></div>
+            <div><span>MAX COMBO</span><strong id="stat-combo">7</strong></div>
+            <div><span>DAMAGE</span><strong id="stat-damage">1,842</strong></div>
+          </div>
+          <div class="result-actions">
+            <button class="ornate-btn primary" id="rematch">REMATCH</button>
+            <button class="ornate-btn" id="result-select">CHANGE WARRIOR</button>
+            <button class="text-btn" id="result-menu">MAIN MENU</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="pause-screen" class="screen pause-screen">
+        <div class="pause-panel">
+          <span class="eyebrow">THE BLADE WAITS</span>
+          <h2>PAUSED</h2>
+          <button class="ornate-btn primary" id="resume">RESUME</button>
+          <button class="ornate-btn" id="restart-round">RESTART FIGHT</button>
+          <button class="text-btn" id="quit-fight">QUIT TO MENU</button>
+          <div class="pause-settings">
+            <button class="mini-toggle" id="quality-toggle">QUALITY: <span>HIGH</span></button>
+            <button class="mini-toggle" id="sound-toggle-2">SOUND: <span>ON</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-screen" class="screen how-screen">
+        <div class="how-panel">
+          <span class="eyebrow">SURVIVE THE NIGHT</span>
+          <h2>HOW TO FIGHT</h2>
+          <div class="how-grid">
+            <div><b>MOVE</b><span>Use the left stick or A / D. Close the distance, then strike.</span></div>
+            <div><b>STRIKE</b><span>Punch and kick chain into combos. Time the next hit during recovery.</span></div>
+            <div><b>GUARD</b><span>Hold block to absorb pressure. Guarding still takes chip damage.</span></div>
+            <div><b>SPECIAL</b><span>Build your meter, then unleash a realm-shaking projectile.</span></div>
+            <div><b>EXECUTION</b><span>When your foe is broken and your meter is full, press special for a cinematic finisher.</span></div>
+            <div><b>ROUNDS</b><span>Win two rounds. The timer favors the warrior with more health.</span></div>
+          </div>
+          <button class="ornate-btn primary" id="how-close">RETURN</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="loading-screen">
+      <div class="loader-mark">A</div>
+      <span class="loader-title">ASHFALL</span>
+      <span class="loader-sub">FORGING THE REALM</span>
+      <div class="loader-track"><i id="loader-bar"></i></div>
+      <span class="loader-hint">BEST PLAYED WITH SOUND</span>
+    </div>
+
+    <div id="rotate-hint">
+      <span>↻</span>
+      <p>ROTATE FOR THE FULL CINEMATIC</p>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
