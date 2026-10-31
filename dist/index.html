@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#120d24" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>SUNSET CITY — Open World Crime</title>
+    <script type="module" crossorigin src="./assets/index-C8uwU0kB.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-B4Oikb1m.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game"></canvas>
+
+      <div id="vignette"></div>
+      <div id="grain"></div>
+      <div id="damage-flash"></div>
+
+      <!-- In-game HUD -->
+      <section id="hud" class="hidden" aria-label="Game heads-up display">
+        <div class="hud-top">
+          <div class="status-cluster">
+            <div class="cash" id="cash">$0</div>
+            <div class="meters">
+              <div class="meter health-meter">
+                <div class="meter-icon">+</div>
+                <div class="meter-track"><div class="meter-fill" id="health-fill"></div></div>
+              </div>
+              <div class="meter armor-meter">
+                <div class="meter-icon">◆</div>
+                <div class="meter-track"><div class="meter-fill" id="armor-fill"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wanted" id="wanted" aria-label="Wanted level">
+            <span class="star" data-star="1">★</span>
+            <span class="star" data-star="2">★</span>
+            <span class="star" data-star="3">★</span>
+            <span class="star" data-star="4">★</span>
+            <span class="star" data-star="5">★</span>
+          </div>
+
+          <div class="top-actions">
+            <button class="icon-btn" id="sound-btn" aria-label="Toggle sound">
+              <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/><path class="sound-wave" d="M14 4.2v2.1a6.5 6.5 0 0 1 0 11.4v2.1a8.5 8.5 0 0 0 0-15.6z"/></svg>
+            </button>
+            <button class="icon-btn" id="pause-btn" aria-label="Pause">
+              <svg viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <aside class="mission-card" id="mission-card">
+          <div class="mission-kicker" id="mission-kicker">CURRENT JOB</div>
+          <div class="mission-title" id="mission-title">The First Score</div>
+          <div class="mission-objective"><span class="objective-dot"></span><span id="mission-objective">Steal the orange coupe</span><span class="mission-distance" id="mission-distance">0m</span></div>
+          <div class="mission-timer hidden" id="mission-timer"><span>00:00</span></div>
+        </aside>
+
+        <div class="minimap-wrap" id="minimap-wrap">
+          <canvas id="minimap" width="320" height="320"></canvas>
+          <div class="minimap-ring"></div>
+          <div class="minimap-north">N</div>
+          <div class="minimap-label" id="district-label">SUNSET BEACH</div>
+        </div>
+
+        <div class="speedo hidden" id="speedo">
+          <div class="speedo-value"><span id="speed-value">0</span><small>MPH</small></div>
+          <div class="speedo-track"><div id="speed-fill"></div></div>
+          <div class="car-health"><span>VEHICLE</span><div class="car-health-track"><i id="car-health-fill"></i></div></div>
+        </div>
+
+        <div class="crosshair hidden" id="crosshair"><span></span></div>
+
+        <div class="context-prompt hidden" id="context-prompt">
+          <span class="keycap" id="context-key">E</span>
+          <span id="context-text">Enter vehicle</span>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <div class="mobile-controls" id="mobile-controls">
+          <div class="joystick" id="joystick">
+            <div class="joystick-arrows"><i>▲</i><i>▼</i><i>◀</i><i>▶</i></div>
+            <div class="joystick-base"></div>
+            <div class="joystick-knob" id="joystick-knob"></div>
+          </div>
+
+          <div class="action-cluster">
+            <button class="action-btn small-btn hidden" id="jump-btn" aria-label="Jump">
+              <svg viewBox="0 0 24 24"><path d="M12 3l6 7h-4v5h-4v-5H6zM5 20h14v2H5z"/></svg>
+              <span>JUMP</span>
+            </button>
+            <button class="action-btn small-btn hidden" id="brake-btn" aria-label="Handbrake">
+              <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+              <span>BRAKE</span>
+            </button>
+            <button class="action-btn context-btn hidden" id="context-btn" aria-label="Interact">
+              <svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11h1a1 1 0 0 1 1 1v5h-2v2h-2v-2H7v2H5v-2H3v-5a1 1 0 0 1 1-1h1zm2.1 0h9.8l-1-3H8.1l-1 3zM7 13.5A1.5 1.5 0 1 0 7 16.5a1.5 1.5 0 0 0 0-3zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+              <span>ENTER</span>
+            </button>
+            <button class="action-btn fire-btn" id="fire-btn" aria-label="Fire">
+              <svg viewBox="0 0 24 24"><path d="M7 3h7l1 5 4 2v3l-3 1v7h-3v-5h-2v5H8v-7l-3-1V8l4-2z"/></svg>
+              <span>FIRE</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="look-hint" id="look-hint"><span>DRAG TO LOOK</span></div>
+        <div class="desktop-hint">WASD MOVE · DRAG LOOK · CLICK FIRE · E INTERACT · ESC PAUSE</div>
+      </section>
+
+      <!-- Loading -->
+      <section id="loading-screen" class="screen">
+        <div class="loading-brand">SUNSET<span>CITY</span></div>
+        <div class="loading-bar"><div id="loading-fill"></div></div>
+        <div class="loading-copy" id="loading-copy">Painting the skyline…</div>
+      </section>
+
+      <!-- Start -->
+      <section id="start-screen" class="screen hidden">
+        <div class="start-scrim"></div>
+        <div class="start-content">
+          <div class="eyebrow">AN OPEN-WORLD CRIME STORY</div>
+          <h1 class="logo">SUNSET<span>CITY</span></h1>
+          <div class="tagline">OWN THE STREETS.<br />OUTRUN THE SUN.</div>
+          <button id="start-btn" class="primary-btn">
+            <span class="play-icon">▶</span>
+            <span>START THE NIGHT</span>
+          </button>
+          <div class="start-meta">
+            <span><b>◆</b> STEAL &amp; DRIVE</span>
+            <span><b>★</b> OUTRUN THE LAW</span>
+            <span><b>$</b> BUILD YOUR NAME</span>
+          </div>
+          <div class="start-foot">BEST IN LANDSCAPE · SOUND ON</div>
+        </div>
+        <button class="corner-sound" id="start-sound" aria-label="Toggle sound">
+          <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+          <span>SOUND ON</span>
+        </button>
+      </section>
+
+      <!-- Pause -->
+      <section id="pause-screen" class="screen hidden">
+        <div class="modal">
+          <div class="eyebrow">PAUSED</div>
+          <h2>SUNSET CITY</h2>
+          <p class="modal-sub">The city never sleeps. Neither does your record.</p>
+          <div class="modal-stats">
+            <div><span>CASH</span><strong id="pause-cash">$0</strong></div>
+            <div><span>JOB</span><strong id="pause-job">—</strong></div>
+            <div><span>WANTED</span><strong id="pause-wanted">CLEAN</strong></div>
+          </div>
+          <button class="primary-btn" id="resume-btn"><span class="play-icon">▶</span><span>BACK TO THE STREETS</span></button>
+          <button class="ghost-btn" id="restart-btn">RESTART GAME</button>
+          <div class="pause-tip" id="pause-tip">Tip: push the joystick up to drive. Drag the right side of the screen to look around.</div>
+        </div>
+      </section>
+
+      <!-- Mission result -->
+      <section id="result-screen" class="screen hidden">
+        <div class="modal result-modal">
+          <div class="result-badge" id="result-badge">JOB COMPLETE</div>
+          <h2 id="result-title">THE FIRST SCORE</h2>
+          <p class="modal-sub" id="result-sub">The case is delivered. The city knows your name.</p>
+          <div class="reward"><span>PAYOUT</span><strong id="result-cash">+$2,500</strong></div>
+          <div class="modal-stats" id="result-stats">
+            <div><span>BALANCE</span><strong id="result-balance">$2,500</strong></div>
+            <div><span>TIME</span><strong id="result-time">02:14</strong></div>
+            <div><span>HEAT</span><strong id="result-heat">2 STARS</strong></div>
+          </div>
+          <button class="primary-btn" id="continue-btn"><span class="play-icon">▶</span><span>KEEP EXPLORING</span></button>
+          <div class="result-foot">Walk into the glowing marker at the lockup to start another job.</div>
+        </div>
+      </section>
+
+      <div id="rotate-hint" class="hidden"><span>↻</span> ROTATE FOR THE FULL EXPERIENCE</div>
+      <div id="build-tag">SUNSET CITY · MOBILE BUILD</div>
+    </div>
+
+  </body>
+</html>

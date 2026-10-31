@@ -1,0 +1,28 @@
+{
+  "name": "sunset-city",
+  "version": "1.0.0",
+  "description": "A stylized open-world crime game for the browser, built with Three.js and Vite.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base ./",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinlanden14-stack/PlayGround.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martinlanden14-stack/PlayGround/issues"
+  },
+  "homepage": "https://github.com/martinlanden14-stack/PlayGround#readme",
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
+  }
+}
