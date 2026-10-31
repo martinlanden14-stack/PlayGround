@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1a16" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Sunset Grind — a golden-hour 3D skateboarding game on the Venice boardwalk." />
+  <title>Sunset Grind — Venice Beach</title>
+  <link rel="preload" href="/fonts/BebasNeue-Regular.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="/fonts/SpaceGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <main id="app">
+    <canvas id="game-canvas" aria-label="Sunset Grind skateboarding game"></canvas>
+    <div class="grade" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- Boot -->
+    <div id="boot" class="boot">
+      <div class="boot-mark">SG<span>’86</span></div>
+      <div class="boot-rule"><i id="boot-progress"></i></div>
+      <p>WAXING THE LEDGES</p>
+    </div>
+
+    <!-- Attract / title screen -->
+    <section id="menu" class="screen menu">
+      <div class="menu-shade" aria-hidden="true"></div>
+      <header class="menu-head">
+        <div class="brand">
+          <span class="brand-mark">SG</span>
+          <span class="brand-copy">SUNSET<br>SKATE CO.</span>
+        </div>
+        <div class="weather">
+          <span class="weather-dot"></span>
+          <span>VENICE BEACH, CA</span>
+          <b>26°</b>
+        </div>
+      </header>
+
+      <div class="menu-hero">
+        <div class="eyebrow">
+          <span>GOLDEN HOUR SESSIONS</span>
+          <span class="eyebrow-line"></span>
+          <span>EST. 1986</span>
+        </div>
+        <h1 class="wordmark" aria-label="Sunset Grind">
+          <span class="word-sunset" data-text="SUNSET">SUNSET</span>
+          <span class="word-grind" data-text="GRIND">GRIND</span>
+        </h1>
+        <p class="tagline">Kick up the coast.<br><em>Leave nothing but lines.</em></p>
+      </div>
+
+      <div class="menu-bottom">
+        <button id="start-btn" class="drop-btn" type="button">
+          <span class="drop-kicker">2:00 SCORE ATTACK</span>
+          <span class="drop-main">DROP IN <i>↗</i></span>
+        </button>
+        <div class="menu-meta">
+          <div><span>PERSONAL BEST</span><strong id="menu-best">0</strong></div>
+          <div><span>TAPES FOUND</span><strong id="menu-tapes">0 / 12</strong></div>
+        </div>
+      </div>
+
+      <div class="menu-foot">
+        <span>HEADPHONES RECOMMENDED</span>
+        <span class="controls-hint"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> SKATE · <kbd>SPACE</kbd> OLLIE · <kbd>J</kbd><kbd>K</kbd><kbd>L</kbd> TRICKS</span>
+        <button id="menu-audio" class="icon-btn" type="button" aria-label="Toggle sound">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Countdown -->
+    <div id="countdown" class="countdown" aria-live="polite">
+      <div class="countdown-ring"></div>
+      <span id="countdown-text">3</span>
+      <small id="countdown-sub">FIND YOUR LINE</small>
+    </div>
+
+    <!-- In-run HUD -->
+    <section id="hud" class="hud" aria-label="Game heads up display">
+      <div class="hud-top">
+        <div class="score-card">
+          <span class="hud-label">RUN SCORE</span>
+          <strong id="score">0</strong>
+          <span class="hud-sub">BEST <b id="hud-best">0</b></span>
+        </div>
+
+        <div class="run-status">
+          <div class="timer" id="timer">
+            <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18"/><circle id="timer-arc" cx="22" cy="22" r="18"/></svg>
+            <span id="timer-text">2:00</span>
+          </div>
+          <div class="tape-pill"><span class="tape-icon"></span><b id="tape-count">0</b><i>/12</i></div>
+        </div>
+
+        <button id="pause-btn" class="icon-btn glass" type="button" aria-label="Pause">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+        </button>
+      </div>
+
+      <div class="combo" id="combo">
+        <div class="combo-top"><span id="combo-label">COMBO</span><strong id="combo-mult">×1</strong></div>
+        <div class="combo-bar"><i id="combo-fill"></i></div>
+        <span id="combo-points">0 PTS</span>
+      </div>
+
+      <div class="run-objective" id="objective">
+        <span class="objective-dot"></span>
+        <span id="objective-text">FIND THE GOLDEN TAPES</span>
+      </div>
+
+      <div id="trick-feed" class="trick-feed" aria-live="polite"></div>
+      <div id="pop-layer" class="pop-layer" aria-hidden="true"></div>
+
+      <div class="speed" id="speed">
+        <span>MPH</span>
+        <strong id="speed-value">0</strong>
+        <div class="speed-bars"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="controls">
+        <div id="joystick" class="joystick" aria-label="Steering joystick">
+          <div class="joy-ring"></div>
+          <div class="joy-cross"><i></i><i></i></div>
+          <div id="joy-knob" class="joy-knob">
+            <span>↑</span>
+          </div>
+          <div class="joy-push">PUSH</div>
+        </div>
+
+        <div class="action-pad">
+          <button class="trick-btn small spin" data-action="spin" type="button" aria-label="360 spin">
+            <span class="trick-ring"></span>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 21a9 9 0 1 0 3-11M9 5l2 5-5 2"/></svg>
+            <b>360</b>
+            <small>L</small>
+          </button>
+          <button class="trick-btn small" data-action="shove" type="button" aria-label="Shove it">
+            <span class="trick-ring"></span>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 22c4-9 14-9 18 0M19 7l6 2-4 5"/></svg>
+            <b>SHOVE</b>
+            <small>K</small>
+          </button>
+          <button class="trick-btn small" data-action="kickflip" type="button" aria-label="Kickflip">
+            <span class="trick-ring"></span>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 12h16l4 4-4 4H6l4-4-4-4Z"/><path d="m20 8 5 3-5 3"/></svg>
+            <b>FLIP</b>
+            <small>J</small>
+          </button>
+          <button class="trick-btn ollie" data-action="ollie" type="button" aria-label="Ollie">
+            <span class="trick-ring"></span>
+            <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 25c6-9 18-9 24 0M13 31h14M20 8v12M15 13l5-5 5 5"/></svg>
+            <b>OLLIE</b>
+            <small>SPACE</small>
+          </button>
+        </div>
+      </div>
+
+      <div id="grind-prompt" class="grind-prompt"><span>GRIND</span><b>HOLD LINE</b></div>
+      <div id="tutorial" class="tutorial">
+        <div class="tutorial-line"><span>01</span><p><b>PUSH</b> the stick forward to build speed</p></div>
+        <div class="tutorial-line"><span>02</span><p><b>OLLIE</b> over rails, then <b>FLIP</b> for points</p></div>
+        <div class="tutorial-line"><span>03</span><p>Land clean to bank your <b>combo</b></p></div>
+      </div>
+    </section>
+
+    <!-- Pause -->
+    <section id="pause" class="screen modal-screen" aria-label="Paused">
+      <div class="modal-card">
+        <span class="modal-eyebrow">SESSION PAUSED</span>
+        <h2>HOLD<br>THE LINE</h2>
+        <p>The sun waits for no one.</p>
+        <div class="modal-actions">
+          <button id="resume-btn" class="solid-btn" type="button">RESUME <i>→</i></button>
+          <button id="pause-restart-btn" class="ghost-btn" type="button">RESTART RUN</button>
+          <button id="pause-audio-btn" class="ghost-btn" type="button">AUDIO: ON</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section id="results" class="screen modal-screen results-screen" aria-label="Run complete">
+      <div class="result-wrap">
+        <div class="result-topline"><span>SESSION COMPLETE</span><span>VENICE BEACH · 6:42 PM</span></div>
+        <div class="result-head">
+          <span class="result-kicker">FINAL SCORE</span>
+          <h2 id="final-score">0</h2>
+          <div class="new-best" id="new-best">NEW PERSONAL BEST</div>
+        </div>
+        <div class="result-stats">
+          <div><span>BEST COMBO</span><b id="stat-combo">0</b></div>
+          <div><span>TAPES</span><b id="stat-tapes">0 / 12</b></div>
+          <div><span>TOP SPEED</span><b id="stat-speed">0 MPH</b></div>
+          <div><span>TRICKS LANDED</span><b id="stat-tricks">0</b></div>
+        </div>
+        <div class="result-actions">
+          <button id="again-btn" class="drop-btn" type="button"><span class="drop-kicker">ONE MORE LINE</span><span class="drop-main">SKATE AGAIN <i>↗</i></span></button>
+          <button id="home-btn" class="ghost-btn" type="button">BACK TO THE BEACH</button>
+        </div>
+        <p class="result-quote" id="result-quote">“The best line is the next one.”</p>
+      </div>
+    </section>
+
+    <div id="rotate-hint" class="rotate-hint">ROTATE FOR THE FULL VIEW <span>↻</span></div>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
