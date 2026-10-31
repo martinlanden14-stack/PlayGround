@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f14">
+<meta name="description" content="OUTLAND — a hand-crafted colony survival simulation. Build, gather, farm and defend your frontier settlement.">
+<title>OUTLAND — Colony Survival</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game" aria-label="Colony map"></canvas>
+<div id="fx-vignette"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M5.5 3.2 19 12l-6.1 1.5L9.6 20z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24"><path d="m13.5 3.2 7.3 7.3-2.8 2.8-7.3-7.3z" fill="currentColor" stroke="none"/><path d="M11.8 8.3 3.5 16.6a1.8 1.8 0 0 0 0 2.5l1.4 1.4a1.8 1.8 0 0 0 2.5 0l8.3-8.3"/></symbol>
+    <symbol id="i-zones" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" stroke-dasharray="3 2.4"/></symbol>
+    <symbol id="i-orders" viewBox="0 0 24 24"><path d="m6 3 11 5.2-4.6 1.9L10.6 21 6 3z" fill="currentColor" stroke="none"/><path d="M17 3v6"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.2 20c0-3.6 2.6-5.8 5.8-5.8s5.8 2.2 5.8 5.8"/><circle cx="17.5" cy="9" r="2.3"/><path d="M15.5 14.7c3 .2 5.3 2.2 5.3 5.3"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v5.3L5.6 17a3.4 3.4 0 0 0 3 4.9h6.8a3.4 3.4 0 0 0 3-4.9L14 8.3V3"/><path d="M7.6 14.5h8.8"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5 19 12 7 19.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3.2"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 8.5 8.5 0 1 0 20 14.2z"/></symbol>
+    <symbol id="i-rain" viewBox="0 0 24 24"><path d="M7 15.5h10a4 4 0 0 0 .7-7.9A5.5 5.5 0 0 0 7 6.7 4.4 4.4 0 0 0 7 15.5z"/><path d="m8 18-1.2 3M12.5 18l-1.2 3M17 18l-1.2 3"/></symbol>
+    <symbol id="i-wood" viewBox="0 0 24 24"><path d="M3 13.5h18v5.2H3z"/><ellipse cx="5.8" cy="16.1" rx="1.6" ry="2.4"/><path d="M4.5 9.1h15v4.4"/><ellipse cx="8.2" cy="11.3" rx="1.4" ry="2"/></symbol>
+    <symbol id="i-stone" viewBox="0 0 24 24"><path d="m6.2 5.2 7.4-1.4 6 4.6-1.7 9.2-7.9 2.2-5.8-4.3z"/><path d="m13.6 3.8-2.2 7.3 8.2-2.7M11.4 11.1 8 15.4M11.4 11.1l4.5 6.5"/></symbol>
+    <symbol id="i-food" viewBox="0 0 24 24"><circle cx="9" cy="13.5" r="3"/><circle cx="14.6" cy="14.8" r="2.7"/><circle cx="13.2" cy="9.2" r="2.6"/><path d="M12.8 6.3c.4-2 2-3.3 4.4-3.3-.3 2.3-1.8 3.6-4 3.6"/></symbol>
+    <symbol id="i-meal" viewBox="0 0 24 24"><path d="M3.5 12h17a8.5 8.5 0 0 1-17 0z"/><path d="M2 20h20"/><path d="M9 7.5c0-1.2 1-1.4 1-2.6M13 7.5c0-1.2 1-1.4 1-2.6M17 7.5c0-1.2 1-1.4 1-2.6"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5S3.5 15.2 3.5 9.4A4.6 4.6 0 0 1 12 6.3a4.6 4.6 0 0 1 8.5 3.1c0 5.8-8.5 11.1-8.5 11.1z"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.8s6.5 7 6.5 11.4A6.5 6.5 0 0 1 5.5 14.2C5.5 9.8 12 2.8 12 2.8z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.5 2 5 13.5h5.5L9.5 22 19 9.8h-5.8z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 20 6v6c0 5.2-3.4 8.3-8 9.5-4.6-1.2-8-4.3-8-9.5V6z"/><path d="m8.5 12 2.4 2.4 4.8-5"/></symbol>
+    <symbol id="i-axe" viewBox="0 0 24 24"><path d="M14.5 3.5c3.4-.4 6.4 2 6 5.8-3.3.3-5.8-1-7.6-3.3z" fill="currentColor" stroke="none"/><path d="m13.5 8.5-9 9"/><path d="M4 21l2.4-3.6"/></symbol>
+    <symbol id="i-pick" viewBox="0 0 24 24"><path d="M3.5 9.5c4.8-5 12.4-5 17 0-4.5-2.2-12.5-2.2-17 0z" fill="currentColor" stroke="none"/><path d="m12 8 1 13"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-2.5 6 2.5 6-2.5v14L15 20l-6-2.5L3 20z"/><path d="M9 3.5v14M15 6v14"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h4L13 5v14L8 14.5H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5h4L13 5v14L8 14.5H4z"/><path d="m16.5 9 5 5M21.5 9l-5 5"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M4 3.5h12.5L20 7v13.5H4z"/><path d="M7 3.5v6h9v-6M7 20.5v-7h10v7"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15M9 3.5h6M6.5 6.5 7.5 21h9l1-14.5M10 10v7M14 10v7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 5 7 7-7 7"/></symbol>
+    <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5"/><circle cx="12" cy="12" r="2.5"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V3.5M6 4h12l-2.5 4L18 12H6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.2v.3"/></symbol>
+    <symbol id="i-wall" viewBox="0 0 24 24"><path d="M3 6h18v12H3z"/><path d="M3 10h18M3 14h18M8 6v4M16 6v4M12 10v4M6 14v4M14 14v4M18 14v4"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M5 21V4h14v17M9 4v17"/><circle cx="15" cy="12.5" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 19V8M3 15h18v4M21 19v-6H3"/><path d="M6 11h5v3H6z"/><circle cx="16.5" cy="11" r="1.5"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 2.5c3.2 4 6 7 6 11a6 6 0 0 1-12 0c0-2.4 1.3-4.2 2.6-5.7.4 1.7 1.1 2.7 2.1 3.4.6-2.6.5-5.4 1.3-8.7z"/></symbol>
+    <symbol id="i-bench" viewBox="0 0 24 24"><path d="M3 9h18v3H3zM5 12v9M19 12v9"/><path d="M7 6h5v3M15 4.5l2.5 2.5-3.5 3.5-2.5-2.5z"/></symbol>
+    <symbol id="i-turret" viewBox="0 0 24 24"><circle cx="12" cy="14" r="4.5"/><path d="M12 9.5V4M8.5 15.5 5 19M15.5 15.5 19 19M12 18.5V21"/><path d="M9.8 4.5h4.4"/></symbol>
+    <symbol id="i-floor" viewBox="0 0 24 24"><path d="M3 4h8v8H3zM13 4h8v8h-8zM3 14h8v7H3zM13 14h8v7h-8z"/></symbol>
+    <symbol id="i-torch" viewBox="0 0 24 24"><path d="M9 10h6l-1 11H10zM7 10h10"/><path d="M12 7.5c1.6-2 2.5-3.4 1.4-5.2 3 .8 4.6 4.4 1.6 6.8-1 .8-3 .6-3-1.6z" fill="currentColor" stroke="none"/></symbol>
+  </defs>
+</svg>
+
+<div id="ui">
+  <header id="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40"><path d="M20 3 37 34H3z" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M20 12 29 30H11z" fill="currentColor"/><path d="M20 3v9" stroke="currentColor" stroke-width="2.2"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1>OUTLAND</h1>
+        <div class="brand-sub"><span id="colonyName">New Haven</span> <span class="dot">·</span> <span id="population">4 souls</span></div>
+      </div>
+    </div>
+    <div class="resbar" id="resbar"></div>
+    <div class="top-right">
+      <div class="clock" id="clock">
+        <svg class="clock-icon" id="clockIcon"><use href="#i-sun"/></svg>
+        <div class="clock-text"><b id="dayLabel">DAY 1</b><span id="timeLabel">07:30</span></div>
+        <div class="weather" id="weather"><svg><use href="#i-sun"/></svg><span>Clear</span></div>
+      </div>
+      <div class="speeds" id="speeds">
+        <button class="speedbtn" data-speed="0" title="Pause"><svg><use href="#i-pause"/></svg></button>
+        <button class="speedbtn active" data-speed="1">1×</button>
+        <button class="speedbtn" data-speed="2">2×</button>
+        <button class="speedbtn" data-speed="4">4×</button>
+      </div>
+      <button class="speedbtn" id="mobileSpeed" data-speed="1" style="display:none;min-width:34px;height:30px;border:1px solid var(--line);background:rgba(255,255,255,.035)">1×</button>
+      <button class="iconbtn" id="mapBtn" title="Minimap"><svg><use href="#i-map"/></svg></button>
+    </div>
+  </header>
+
+  <div id="colonistBar" class="colonist-bar"></div>
+
+  <div id="objectives" class="objectives glass">
+    <div class="obj-head"><span>COLONY GOALS</span><span id="objCount">0/5</span></div>
+    <div id="objList"></div>
+  </div>
+
+  <div id="raidBanner" class="raid-banner hidden">
+    <div class="rb-icon"><svg><use href="#i-shield"/></svg></div>
+    <div class="rb-text"><b id="raidTitle">Raiders sighted</b><span id="raidSub">Approaching from the north — 00:20</span></div>
+    <button id="defendBtn" class="btn danger small">DEFEND</button>
+  </div>
+
+  <div id="toasts" class="toasts"></div>
+  <div id="selectionCard" class="selection glass hidden"></div>
+
+  <div id="toolbar" class="toolbar">
+    <button class="tool active" data-tool="select"><span class="ticon"><svg><use href="#i-cursor"/></svg></span><span class="tlabel">Select</span></button>
+    <button class="tool" data-tool="build"><span class="ticon"><svg><use href="#i-hammer"/></svg></span><span class="tlabel">Build</span></button>
+    <button class="tool" data-tool="zone"><span class="ticon"><svg><use href="#i-zones"/></svg></span><span class="tlabel">Zones</span></button>
+    <button class="tool" data-tool="order"><span class="ticon"><svg><use href="#i-orders"/></svg></span><span class="tlabel">Orders</span></button>
+    <button class="tool" data-tool="colonists"><span class="ticon"><svg><use href="#i-people"/></svg></span><span class="tlabel">Colonists</span></button>
+    <button class="tool" data-tool="research"><span class="ticon"><svg><use href="#i-flask"/></svg></span><span class="tlabel">Research</span></button>
+    <button class="tool" data-tool="menu"><span class="ticon"><svg><use href="#i-menu"/></svg></span><span class="tlabel">Menu</span></button>
+  </div>
+
+  <div id="drawer" class="drawer hidden">
+    <div class="drawer-grip"></div>
+    <div class="drawer-head">
+      <div><h2 id="drawerTitle">Build</h2><p id="drawerSub">Choose a structure, then tap the map.</p></div>
+      <button class="iconbtn ghost" id="drawerClose"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div id="drawerBody" class="drawer-body"></div>
+    <div id="drawerFoot" class="drawer-foot"></div>
+  </div>
+
+  <div id="placementBar" class="placement hidden">
+    <div class="pl-left"><span class="pl-dot"></span><div><b id="plName">Timber Wall</b><span id="plHint">Tap the map to place · drag to paint</span></div></div>
+    <div class="pl-actions">
+      <button class="btn ghost small" id="plCancel">Cancel</button>
+    </div>
+  </div>
+
+  <div id="tutorial" class="tutorial hidden">
+    <div class="tut-icon"><svg><use href="#i-info"/></svg></div>
+    <div class="tut-text"><b id="tutTitle">Welcome to the frontier</b><span id="tutBody">Tap a colonist to select them. Drag to pan, pinch to zoom.</span></div>
+    <button class="iconbtn ghost" id="tutClose"><svg><use href="#i-close"/></svg></button>
+  </div>
+
+  <div id="minimapWrap" class="minimap-wrap">
+    <canvas id="minimap" width="168" height="168"></canvas>
+    <div class="mm-label">OUTLAND</div>
+    <button class="iconbtn tiny" id="mmClose"><svg><use href="#i-close"/></svg></button>
+  </div>
+
+  <div id="titleScreen" class="title-screen">
+    <div class="title-bg"></div>
+    <div class="title-inner">
+      <div class="eyebrow">A COLONY SURVIVAL SIMULATION</div>
+      <h1 class="game-title">OUTLAND</h1>
+      <div class="title-rule"></div>
+      <p class="tagline">Four souls. A wild frontier. Make it home.</p>
+      <div class="title-actions">
+        <button id="newGameBtn" class="btn primary big">FOUND A COLONY</button>
+        <button id="continueBtn" class="btn ghost big hidden">CONTINUE</button>
+      </div>
+      <div class="title-tips">
+        <div class="tip"><svg><use href="#i-move"/></svg><b>Drag</b><span>Pan the land</span></div>
+        <div class="tip"><svg><use href="#i-target"/></svg><b>Tap</b><span>Select &amp; command</span></div>
+        <div class="tip"><svg><use href="#i-people"/></svg><b>Pinch</b><span>Zoom in close</span></div>
+      </div>
+      <div class="title-foot"><span id="seedLabel"></span><span>Best played with sound</span></div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card glass" id="modalCard"></div>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
