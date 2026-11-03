@@ -23,11 +23,13 @@
       <div id="hitmarker" class="hitmarker">×</div>
       <div id="waveBanner" class="wave-banner"><span>INCOMING</span><b>WAVE 01</b></div>
       <div id="damageFlash" class="damage-flash"></div>
-      <div class="controls-hint" id="controlsHint">WASD MOVE <span>•</span> MOUSE AIM <span>•</span> CLICK FIRE <span>•</span> R RELOAD</div>
+      <div class="controls-hint" id="controlsHint">WASD MOVE <span>•</span> SHIFT SPRINT <span>•</span> RMB AIM <span>•</span> CLICK FIRE <span>•</span> R RELOAD <span>•</span> ESC PAUSE</div>
       <div class="mobile-controls" id="mobileControls">
         <div class="joystick" id="joystick"><div class="joy-ring"></div><div class="joy-knob" id="joyKnob"></div><span>MOVE</span></div>
         <div class="look-zone" id="lookZone"></div>
         <button class="touch-button fire-button" id="fireButton"><span class="fire-icon">✦</span>FIRE</button>
+        <button class="touch-button aim-button" id="aimButton" aria-pressed="false">◎<small>AIM</small></button>
+        <button class="touch-button sprint-button" id="sprintButton" aria-pressed="false">»<small>SPRINT</small></button>
         <button class="touch-button reload-button" id="reloadButton">↻<small>RELOAD</small></button>
       </div>
       <button id="pauseButton" class="pause-button" aria-label="Pause">Ⅱ</button>
@@ -40,8 +42,8 @@
         <p class="story">The quarantine line has fallen.<br/>You are the last signal in Sector 09.</p>
         <button id="startButton" class="primary-button"><span>DEPLOY</span><b>→</b></button>
         <div class="start-meta"><span>☠</span> SURVIVE THE NIGHT <i></i> CLEAR EACH WAVE</div>
-        <div class="desktop-instructions">WASD to move <span>·</span> Mouse to aim <span>·</span> Click to fire <span>·</span> R to reload</div>
-        <div class="mobile-instructions">LEFT THUMB MOVE <span>·</span> DRAG TO AIM <span>·</span> TAP FIRE</div>
+        <div class="desktop-instructions">WASD move <span>·</span> Shift sprint <span>·</span> RMB aim <span>·</span> Click fire <span>·</span> R reload<br/>GAMEPAD: LEFT STICK MOVE <span>·</span> RIGHT STICK LOOK <span>·</span> LT AIM <span>·</span> RT FIRE <span>·</span> X RELOAD <span>·</span> L3 / R3 SPRINT <span>·</span> START PAUSE</div>
+        <div class="mobile-instructions">LEFT THUMB MOVE <span>·</span> DRAG TO LOOK <span>·</span> HOLD AIM / SPRINT / FIRE <span>·</span> TAP RELOAD</div>
       </div>
       <div class="version-tag">FIELD MANUAL 09.04 <span>///</span> BUILD 1.0</div>
     </section>
