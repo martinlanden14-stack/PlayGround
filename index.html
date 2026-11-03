@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Neon Drift</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2308121d'/%3E%3Cpath d='M32 10 L48 38 L32 54 L16 38 Z' fill='%237ee8ff'/%3E%3Cpath d='M32 18 L40 34 L32 44 L24 34 Z' fill='%23ff63d8'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-shell">
+      <canvas id="gameCanvas" aria-label="Neon Drift arcade game"></canvas>
+
+      <div id="hud" class="hud hidden">
+        <div class="top-bar">
+          <div class="pill"><span>Score</span><strong id="scoreText">0</strong></div>
+          <div class="pill"><span>Best</span><strong id="bestText">0</strong></div>
+          <div class="pill"><span>Lives</span><strong id="livesText">3</strong></div>
+        </div>
+      </div>
+
+      <div id="menu" class="overlay visible">
+        <div class="panel">
+          <div class="badge">NEON DRIFT</div>
+          <h1>Night Pulse</h1>
+          <p>Thread the lane, dodge drones, and grab energy cores.</p>
+          <ul>
+            <li>Use A / D or arrow keys</li>
+            <li>Tap or swipe on mobile</li>
+            <li>Survive as long as you can</li>
+          </ul>
+          <button id="startButton">Start Run</button>
+        </div>
+      </div>
+
+      <div id="gameOver" class="overlay hidden">
+        <div class="panel">
+          <div class="badge">Run Ended</div>
+          <h2>Mission Failed</h2>
+          <p id="finalScoreText">Score: 0</p>
+          <button id="restartButton">Play Again</button>
+        </div>
+      </div>
+
+      <div class="touch-controls" aria-label="Touch controls">
+        <button id="leftButton" class="control-button" aria-label="Move left">◀</button>
+        <button id="rightButton" class="control-button" aria-label="Move right">▶</button>
+      </div>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>

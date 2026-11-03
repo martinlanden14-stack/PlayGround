@@ -1,0 +1,210 @@
+:root {
+  --bg: #08131f;
+  --bg-2: #101c2d;
+  --panel: rgba(12, 24, 32, 0.9);
+  --panel-edge: rgba(121, 238, 255, 0.45);
+  --cyan: #7ee8ff;
+  --blue: #4aa9ff;
+  --purple: #9b7dff;
+  --pink: #ff63d8;
+  --green: #80ffb8;
+  --yellow: #ffd166;
+  --danger: #ff5d73;
+  --text: #ebf7ff;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #12283d, var(--bg) 48%);
+  color: var(--text);
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+.game-shell {
+  position: relative;
+  width: min(100vw, 480px);
+  height: min(100vh, 820px);
+  overflow: hidden;
+  border: 1px solid rgba(126, 232, 255, 0.25);
+  background: linear-gradient(180deg, rgba(24, 34, 52, 0.9), rgba(8, 19, 31, 1));
+  box-shadow: 0 0 40px rgba(74, 169, 255, 0.19);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 20%, rgba(81, 113, 168, 0.45), rgba(11, 18, 29, 0.92) 42%, rgba(4, 8, 15, 0.96));
+}
+
+.hud {
+  position: absolute;
+  inset: 0 0 auto 0;
+  padding: 18px 18px 0;
+  pointer-events: none;
+}
+
+.top-bar {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.pill {
+  display: flex;
+  flex-direction: column;
+  min-width: 72px;
+  padding: 8px 10px;
+  border: 1px solid rgba(126, 232, 255, 0.25);
+  border-radius: 12px;
+  background: rgba(8, 15, 22, 0.6);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 16px rgba(74, 169, 255, 0.08);
+}
+
+.pill span {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(235, 247, 255, 0.72);
+}
+
+.pill strong {
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 9, 16, 0.52);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.2s ease;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlay.visible {
+  opacity: 1;
+}
+
+.panel {
+  width: min(82vw, 320px);
+  padding: 24px 22px 18px;
+  border-radius: 18px;
+  text-align: center;
+  border: 1px solid var(--panel-edge);
+  background: linear-gradient(180deg, rgba(13, 24, 31, 0.94), rgba(4, 13, 22, 0.88));
+  box-shadow: 0 16px 42px rgba(10, 16, 24, 0.65), inset 0 0 24px rgba(126, 232, 255, 0.08);
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  background: rgba(126, 232, 255, 0.12);
+  border: 1px solid rgba(126, 232, 255, 0.36);
+  color: var(--cyan);
+}
+
+h1, h2 {
+  margin: 0 0 10px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+h1 {
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 6vw, 2.3rem);
+}
+
+p, li {
+  color: rgba(236, 246, 255, 0.8);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 18px;
+  line-height: 1.8;
+}
+
+button {
+  appearance: none;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  color: #041723;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(74, 169, 255, 0.32);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.touch-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px calc(20px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+
+.control-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  background: rgba(8, 16, 24, 0.6);
+  border: 1px solid rgba(126, 232, 255, 0.36);
+  color: var(--text);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (min-width: 700px) {
+  .game-shell {
+    width: min(100vw, 540px);
+  }
+}
