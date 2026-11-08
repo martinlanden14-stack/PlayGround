@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#101114" />
+    <meta name="description" content="A tactile first-person sword duel. Read the guard, parry the strike, and carve through the dusk." />
+    <title>Vow of Ash — Arena Duel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-BTZez-MD.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BrjAMwuV.css">
+  </head>
+  <body>
+    <main id="game-shell">
+      <canvas id="scene" aria-label="Three-dimensional sword duel arena"></canvas>
+      <div class="vignette" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+
+      <header class="topbar">
+        <a class="wordmark" href="#" aria-label="Vow of Ash home"><span class="mark">✳</span><span>VOW <i>OF</i> ASH</span></a>
+        <div class="round-chip"><span class="live-dot"></span> THE ASHEN COURT</div>
+        <button class="sound-button" id="sound-toggle" aria-label="Toggle sound"><span id="sound-icon">♪</span><span>SOUND</span></button>
+      </header>
+
+      <section class="combat-hud" id="combat-hud" aria-label="Combat status">
+        <div class="fighter-card player-card">
+          <div class="fighter-name"><span>THE WANDERER</span><span class="level">LV. 01</span></div>
+          <div class="health-track"><span id="player-health" class="health-fill player-fill"></span></div>
+          <div class="health-meta"><span id="player-health-text">100</span><span>VITALITY</span></div>
+        </div>
+        <div class="fight-center"><div class="round-label">DUEL <span>01</span></div><div class="versus">VS</div><div class="round-timer" id="timer">00:00</div></div>
+        <div class="fighter-card enemy-card">
+          <div class="fighter-name"><span>THE IRON WARDEN</span><span class="level">ELITE</span></div>
+          <div class="health-track"><span id="enemy-health" class="health-fill enemy-fill"></span></div>
+          <div class="health-meta"><span id="enemy-health-text">100</span><span>VITALITY</span></div>
+        </div>
+      </section>
+
+      <div class="enemy-callout" id="enemy-callout"><span class="callout-line"></span><span id="callout-text">WARDEN · HOLDING GUARD</span><span class="callout-line"></span></div>
+      <div class="attack-warning" id="attack-warning"><span class="warning-icon">✦</span><span>INCOMING STRIKE</span><span class="warning-icon">✦</span></div>
+
+      <div class="action-hints" id="action-hints">
+        <div class="hint"><span class="hint-key">↗</span><span>SLASH</span></div>
+        <div class="hint-divider"></div>
+        <div class="hint"><span class="hint-key">↙</span><span>SLASH</span></div>
+        <div class="hint-divider"></div>
+        <div class="hint"><span class="hint-key parry-key">✧</span><span>SWIPE TO PARRY</span></div>
+      </div>
+
+      <div class="swipe-tip" id="swipe-tip"><span class="tip-spark">✦</span><span>SWIPE ANY DIRECTION TO SWING</span><span class="tip-hand">⌁</span></div>
+      <div class="combo-toast" id="combo-toast">PERFECT PARRY <span>+100</span></div>
+      <div class="hit-flash" id="hit-flash"></div>
+
+      <div class="mobile-controls" aria-label="Touch controls">
+        <button id="guard-button" class="control-button guard-button" aria-label="Hold to guard"><span>⬡</span><small>GUARD</small></button>
+        <button id="strike-button" class="control-button strike-button" aria-label="Strike"><span>⚔</span><small>STRIKE</small></button>
+      </div>
+
+      <div class="overlay" id="start-overlay">
+        <div class="overlay-card intro-card">
+          <div class="eyebrow"><span></span> A DUEL AT DUSK <span></span></div>
+          <div class="crest">✳</div>
+          <h1>VOW <em>OF</em><br />ASH</h1>
+          <p class="subtitle">Steel remembers every promise.</p>
+          <div class="intro-rule"></div>
+          <p class="intro-copy">Read the Warden’s stance. Swipe to strike.<br />Meet their blade at the right moment to parry.</p>
+          <button id="start-button" class="primary-button"><span>ENTER THE ARENA</span><b>↗</b></button>
+          <div class="control-note"><span>↗</span> TOUCH & DRAG TO SWING <i>·</i> <span>✧</span> PARRY THE FLASH</div>
+        </div>
+        <div class="overlay-footer">A QUIET PLACE TO SETTLE THINGS <span>✳</span></div>
+      </div>
+
+      <div class="overlay hidden" id="end-overlay">
+        <div class="overlay-card end-card">
+          <div class="eyebrow" id="end-eyebrow"><span></span> DUEL COMPLETE <span></span></div>
+          <div class="crest end-crest" id="end-crest">✳</div>
+          <h2 id="end-title">THE VOW HOLDS</h2>
+          <p class="subtitle" id="end-subtitle">The arena is quiet again.</p>
+          <div class="result-stats"><div><b id="result-time">00:00</b><span>TIME</span></div><div><b id="result-score">0000</b><span>HONOR</span></div><div><b id="result-parries">0</b><span>PARRIES</span></div></div>
+          <button id="restart-button" class="primary-button"><span>FIGHT AGAIN</span><b>↻</b></button>
+          <div class="control-note"><span>✳</span> THE WARDEN WILL REMEMBER</div>
+        </div>
+        <div class="overlay-footer">A QUIET PLACE TO SETTLE THINGS <span>✳</span></div>
+      </div>
+
+      <div class="screen-edge" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </main>
+  </body>
+</html>
